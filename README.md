@@ -5,7 +5,7 @@
 ####Download
 * [Download APK from here](https://github.com/anthonycr/Thunder-Browser/blob/master/BrowserActivity.apk?raw=true)
 
-* [Download from Google Play](https://play.google.com/store/apps/details?id=acr.browser.thunder)
+* Download from Google Play (Not available right now)
 
 
 ####Features
