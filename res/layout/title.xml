@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="175dp"
+    android:layout_height="30dp"
+    android:layout_gravity="center_vertical"
+    android:background="@drawable/tab_background_active"
+    android:drawablePadding="1dp"
+    android:ellipsize="end"
+    android:gravity="center_vertical"
+    android:maxHeight="30dp"
+    android:maxLines="1"
+    android:maxWidth="175dp"
+    android:minHeight="30dp"
+    android:minWidth="175dp"
+    android:paddingLeft="20dp"
+    android:paddingRight="15dp"
+    android:singleLine="true"
+    android:text="@string/action_new_tab"
+    android:textAppearance="?android:attr/textAppearanceSmall" >
+
+</TextView>
