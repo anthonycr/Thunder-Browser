@@ -34,6 +34,7 @@ import android.view.GestureDetector.SimpleOnGestureListener;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.webkit.GeolocationPermissions;
 import android.webkit.HttpAuthHandler;
@@ -66,6 +67,7 @@ public class LightningView {
 	private static SharedPreferences mPreferences;
 	private static boolean mWideViewPort;
 	private static AdBlock mAdBlock;
+	private boolean isDestroyed = false;
 
 	public LightningView(Activity activity, String url) {
 		mActivity = activity;
@@ -482,6 +484,7 @@ public class LightningView {
 	}
 
 	public synchronized void onDestroy() {
+		isDestroyed = true;
 		if (mWebView != null) {
 			mWebView.stopLoading();
 			mWebView.onPause();
@@ -494,6 +497,10 @@ public class LightningView {
 		}
 	}
 
+	public boolean isDestroyed() {
+		return isDestroyed;
+	}
+	
 	public synchronized void goBack() {
 		if (mWebView != null)
 			mWebView.goBack();
@@ -968,8 +975,7 @@ public class LightningView {
 						} else {
 							if (event.getAction() == MotionEvent.ACTION_UP) {
 								Log.i("Thunder", "here we are");
-								if (!isShown())
-									mBrowserController.showSelectedTab(mId);
+								view.performClick();
 							}
 							return true;
 						}
@@ -977,6 +983,15 @@ public class LightningView {
 					return false;
 				}
 
+			});
+			mTitleView.setOnClickListener(new OnClickListener(){
+
+				@Override
+				public void onClick(View v) {
+					if (!isShown() && !isDestroyed())
+						mBrowserController.showSelectedTab(mId);
+				}
+				
 			});
 		}
 

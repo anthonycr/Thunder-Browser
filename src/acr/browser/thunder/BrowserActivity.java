@@ -142,6 +142,7 @@ public class BrowserActivity extends Activity implements BrowserController {
 	private static HorizontalScrollView mTabScrollView;
 	private static VideoView mVideoView;
 	private static SearchAdapter mSearchAdapter;
+	private static boolean viewIsAnimating = false;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -873,7 +874,6 @@ public class BrowserActivity extends Activity implements BrowserController {
 
 	@Override
 	public synchronized void onBackPressed() {
-		mTabLayout.clearDisappearingChildren();
 		showActionBar();
 		if (mCurrentView.canGoBack()) {
 			if (!mCurrentView.isShown()) {
@@ -882,7 +882,8 @@ public class BrowserActivity extends Activity implements BrowserController {
 				mCurrentView.goBack();
 			}
 		} else {
-			deleteTab(mCurrentView.getId());
+			if (!mCurrentView.isDestroyed())
+				deleteTab(mCurrentView.getId());
 		}
 	}
 
@@ -1420,7 +1421,6 @@ public class BrowserActivity extends Activity implements BrowserController {
 	}
 
 	public synchronized void initializeTabs() {
-		mIdGenerator = 0;
 
 		String url = null;
 		if (getIntent() != null) {
@@ -1572,20 +1572,28 @@ public class BrowserActivity extends Activity implements BrowserController {
 	}
 
 	@Override
-	public void showSelectedTab(int id) {
+	public synchronized void showSelectedTab(int id) {
 		mIsNewIntent = false;
 		int index = mIdList.indexOf(id);
+		if (index == -1) {
+			return;
+		}
 		showTab(mWebViewList.get(index));
 	}
 
 	@Override
 	public synchronized void deleteTab(int id) {
+		if (viewIsAnimating) {
+			return;
+		}
 		mTabLayout.clearDisappearingChildren();
 		int position = mIdList.indexOf(id);
 		if (position >= mWebViewList.size()) {
 			return;
 		}
-		mTabScrollView.smoothScrollTo(mCurrentView.getTitleView().getLeft(), 0);
+		if (position == -1) {
+			return;
+		}
 		int current = mIdList.indexOf(mCurrentView.getId());
 		if (current == -1) {
 			return;
@@ -1594,25 +1602,36 @@ public class BrowserActivity extends Activity implements BrowserController {
 		if (reference == null) {
 			return;
 		}
+		mTabScrollView.smoothScrollTo(mCurrentView.getTitleView().getLeft(), 0);
 		final boolean isShown = reference.isShown();
 		if (current > position) {
 			if (reference.isShown()) {
 				showTab(mWebViewList.get(position - 1));
 			}
+
 			animateTabRemoval(mWebViewList.get(position).getTitleView(),
 					position, reference, isShown);
+			reference.onDestroy();
+			mWebViewList.remove(position);
+			mIdList.remove(position);
 		} else if (mWebViewList.size() > position + 1) {
 			if (reference.isShown()) {
 				showTab(mWebViewList.get(position + 1));
 			}
 			animateTabRemoval(mWebViewList.get(position).getTitleView(),
 					position, reference, isShown);
+			reference.onDestroy();
+			mWebViewList.remove(position);
+			mIdList.remove(position);
 		} else if (mWebViewList.size() > 1) {
 			if (reference.isShown()) {
 				showTab(mWebViewList.get(position - 1));
 			}
 			animateTabRemoval(mWebViewList.get(position).getTitleView(),
 					position, reference, isShown);
+			reference.onDestroy();
+			mWebViewList.remove(position);
+			mIdList.remove(position);
 		} else {
 			if (mCurrentView.getUrl().startsWith(Constants.FILE)
 					|| mCurrentView.getUrl().equals(mHomepage)) {
@@ -1644,21 +1663,24 @@ public class BrowserActivity extends Activity implements BrowserController {
 
 			@Override
 			public void onAnimationEnd(Animation animation) {
-				new Handler().post(new Runnable() {
 
-					@Override
+				mTabLayout.post(new Runnable() {
 					public void run() {
-						mTabLayout.removeView(view);
-						mWebViewList.remove(position);
-						mIdList.remove(position);
-						reference.onDestroy();
-						if (mIsNewIntent && isShown) {
-							mIsNewIntent = false;
-							moveTaskToBack(true);
-						}
+						// it works without the runOnUiThread, but all UI
+						// updates must
+						// be done on the UI thread
+						mActivity.runOnUiThread(new Runnable() {
+							public void run() {
+								mTabLayout.removeView(view);
+								viewIsAnimating = false;
+							}
+						});
 					}
-
 				});
+				if (mIsNewIntent && isShown) {
+					mIsNewIntent = false;
+					moveTaskToBack(true);
+				}
 
 			}
 
@@ -1669,18 +1691,11 @@ public class BrowserActivity extends Activity implements BrowserController {
 
 			@Override
 			public void onAnimationStart(Animation animation) {
-
+				viewIsAnimating = true;
 			}
 
 		});
-		view.post(new Runnable() {
-
-			@Override
-			public void run() {
-				view.startAnimation(mRemoveTab);
-			}
-
-		});
+		view.startAnimation(mRemoveTab);
 	}
 
 	private synchronized void animateTabAddition(final LightningView view,
