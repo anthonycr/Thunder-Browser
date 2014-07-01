@@ -4,7 +4,7 @@
     <translate
         android:duration="150"
         android:fromYDelta="100%p"
-        android:interpolator="@android:anim/linear_interpolator"
+        android:interpolator="@android:anim/decelerate_interpolator"
         android:toYDelta="0%p" />
 
 </set>

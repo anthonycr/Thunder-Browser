@@ -1701,9 +1701,8 @@ public class BrowserActivity extends Activity implements BrowserController {
 	private synchronized void animateTabAddition(final LightningView view,
 			final boolean show) {
 		if (show) {
-			view.getWebView().setVisibility(View.INVISIBLE);
+			view.setInvisible();
 			mBrowserFrame.addView(view.getWebView());
-
 		}
 		if (mFullScreen) {
 			mUrlBar.bringToFront();
@@ -1720,7 +1719,7 @@ public class BrowserActivity extends Activity implements BrowserController {
 				mTabScrollView.smoothScrollTo(mCurrentView.getTitleView()
 						.getLeft(), 0);
 				if (show) {
-					view.getWebView().setVisibility(View.VISIBLE);
+					view.setVisible();
 				}
 			}
 

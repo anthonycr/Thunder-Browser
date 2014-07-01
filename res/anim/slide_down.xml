@@ -6,6 +6,6 @@
 	        android:interpolator="@android:anim/decelerate_interpolator"
             android:duration="@android:integer/config_shortAnimTime"/>
     <alpha android:fromAlpha="0.25" android:toAlpha="1.0"
-			android:interpolator="@android:anim/linear_interpolator"
+			android:interpolator="@android:anim/decelerate_interpolator"
             android:duration="@android:integer/config_shortAnimTime" />
 </set>

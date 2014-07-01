@@ -68,7 +68,7 @@ public class LightningView {
 	private static boolean mWideViewPort;
 	private static AdBlock mAdBlock;
 	private boolean isDestroyed = false;
-
+	
 	public LightningView(Activity activity, String url) {
 		mActivity = activity;
 		mWebView = new WebView(activity);
@@ -265,18 +265,21 @@ public class LightningView {
 	}
 
 	public synchronized void initializePreferences(Context context) {
-		mPreferences = context.getSharedPreferences(PreferenceConstants.PREFERENCES, 0);
-		mHomepage = mPreferences.getString(PreferenceConstants.HOMEPAGE, Constants.HOMEPAGE);
+		mPreferences = context.getSharedPreferences(
+				PreferenceConstants.PREFERENCES, 0);
+		mHomepage = mPreferences.getString(PreferenceConstants.HOMEPAGE,
+				Constants.HOMEPAGE);
 		mAdBlock.updatePreference();
 		if (mSettings == null && mWebView != null) {
 			mSettings = mWebView.getSettings();
 		} else if (mSettings == null) {
 			return;
 		}
-		mSettings.setGeolocationEnabled(mPreferences.getBoolean(PreferenceConstants.LOCATION,
-				false));
+		mSettings.setGeolocationEnabled(mPreferences.getBoolean(
+				PreferenceConstants.LOCATION, false));
 		if (API < 19) {
-			switch (mPreferences.getInt(PreferenceConstants.ADOBE_FLASH_SUPPORT, 0)) {
+			switch (mPreferences.getInt(
+					PreferenceConstants.ADOBE_FLASH_SUPPORT, 0)) {
 			case 0:
 				mSettings.setPluginState(PluginState.OFF);
 				break;
@@ -331,13 +334,14 @@ public class LightningView {
 			mSettings.setLayoutAlgorithm(LayoutAlgorithm.NORMAL);
 		}
 
-		mSettings.setBlockNetworkImage(mPreferences.getBoolean(PreferenceConstants.BLOCK_IMAGES,
-				false));
+		mSettings.setBlockNetworkImage(mPreferences.getBoolean(
+				PreferenceConstants.BLOCK_IMAGES, false));
 		mSettings.setSupportMultipleWindows(mPreferences.getBoolean(
 				PreferenceConstants.POPUPS, true));
-		mSettings.setUseWideViewPort(mPreferences.getBoolean(PreferenceConstants.USE_WIDE_VIEWPORT,
-				true));
-		mWideViewPort = mPreferences.getBoolean(PreferenceConstants.USE_WIDE_VIEWPORT, true);
+		mSettings.setUseWideViewPort(mPreferences.getBoolean(
+				PreferenceConstants.USE_WIDE_VIEWPORT, true));
+		mWideViewPort = mPreferences.getBoolean(
+				PreferenceConstants.USE_WIDE_VIEWPORT, true);
 		mSettings.setLoadWithOverviewMode(mPreferences.getBoolean(
 				PreferenceConstants.OVERVIEW_MODE, true));
 		switch (mPreferences.getInt(PreferenceConstants.TEXT_SIZE, 3)) {
@@ -500,7 +504,7 @@ public class LightningView {
 	public boolean isDestroyed() {
 		return isDestroyed;
 	}
-	
+
 	public synchronized void goBack() {
 		if (mWebView != null)
 			mWebView.goBack();
@@ -511,6 +515,19 @@ public class LightningView {
 			return mWebView.getSettings().getUserAgentString();
 		} else {
 			return "";
+		}
+	}
+
+	public void setVisible() {
+		if (mWebView != null) {
+			mWebView.setVisibility(View.VISIBLE);
+			mBrowserController.updateUrl(mWebView.getUrl());
+		}
+	}
+	
+	public void setInvisible() {
+		if (mWebView != null) {
+			mWebView.setVisibility(View.INVISIBLE);
 		}
 	}
 
@@ -589,6 +606,7 @@ public class LightningView {
 		@Override
 		public void onPageFinished(WebView view, String url) {
 			if (view.isShown()) {
+				mBrowserController.updateUrl(url);
 				if (!url.startsWith(Constants.FILE)) {
 					mBrowserController.hideActionBar();
 				}
@@ -600,10 +618,13 @@ public class LightningView {
 
 		@Override
 		public void onPageStarted(WebView view, String url, Bitmap favicon) {
+			Log.i("Thunder: ", url);
 			if (!mSettings.getUseWideViewPort()) {
 				mSettings.setUseWideViewPort(mWideViewPort);
 			}
+			Log.i("Thunder: ", isShown() + "");
 			if (isShown()) {
+				Log.i("Thunder: setUrl", url);
 				mBrowserController.updateUrl(url);
 				mBrowserController.showActionBar();
 			}
@@ -646,7 +667,8 @@ public class LightningView {
 			builder.setTitle(mActivity.getString(R.string.title_sign_in));
 			builder.setView(passLayout);
 			builder.setCancelable(true)
-					.setPositiveButton(mActivity.getString(R.string.title_sign_in),
+					.setPositiveButton(
+							mActivity.getString(R.string.title_sign_in),
 							new DialogInterface.OnClickListener() {
 								@Override
 								public void onClick(DialogInterface dialog,
@@ -658,7 +680,8 @@ public class LightningView {
 
 								}
 							})
-					.setNegativeButton(mActivity.getString(R.string.action_cancel),
+					.setNegativeButton(
+							mActivity.getString(R.string.action_cancel),
 							new DialogInterface.OnClickListener() {
 								@Override
 								public void onClick(DialogInterface dialog,
@@ -687,7 +710,8 @@ public class LightningView {
 			builder.setMessage(
 					mActivity.getString(R.string.message_untrusted_certificate))
 					.setCancelable(true)
-					.setPositiveButton(mActivity.getString(R.string.action_yes),
+					.setPositiveButton(
+							mActivity.getString(R.string.action_yes),
 							new DialogInterface.OnClickListener() {
 								@Override
 								public void onClick(DialogInterface dialog,
@@ -716,10 +740,13 @@ public class LightningView {
 		public void onFormResubmission(WebView view, final Message dontResend,
 				final Message resend) {
 			AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);
-			builder.setTitle(mActivity.getString(R.string.title_form_resubmission));
-			builder.setMessage(mActivity.getString(R.string.message_form_resubmission))
+			builder.setTitle(mActivity
+					.getString(R.string.title_form_resubmission));
+			builder.setMessage(
+					mActivity.getString(R.string.message_form_resubmission))
 					.setCancelable(true)
-					.setPositiveButton(mActivity.getString(R.string.action_yes),
+					.setPositiveButton(
+							mActivity.getString(R.string.action_yes),
 							new DialogInterface.OnClickListener() {
 								@Override
 								public void onClick(DialogInterface dialog,
@@ -839,9 +866,11 @@ public class LightningView {
 			} else {
 				org = origin;
 			}
-			builder.setMessage(org + mActivity.getString(R.string.message_location))
+			builder.setMessage(
+					org + mActivity.getString(R.string.message_location))
 					.setCancelable(true)
-					.setPositiveButton(mActivity.getString(R.string.action_allow),
+					.setPositiveButton(
+							mActivity.getString(R.string.action_allow),
 							new DialogInterface.OnClickListener() {
 								@Override
 								public void onClick(DialogInterface dialog,
@@ -849,7 +878,8 @@ public class LightningView {
 									callback.invoke(origin, true, remember);
 								}
 							})
-					.setNegativeButton(mActivity.getString(R.string.action_dont_allow),
+					.setNegativeButton(
+							mActivity.getString(R.string.action_dont_allow),
 							new DialogInterface.OnClickListener() {
 								@Override
 								public void onClick(DialogInterface dialog,
@@ -984,14 +1014,14 @@ public class LightningView {
 				}
 
 			});
-			mTitleView.setOnClickListener(new OnClickListener(){
+			mTitleView.setOnClickListener(new OnClickListener() {
 
 				@Override
 				public void onClick(View v) {
 					if (!isShown() && !isDestroyed())
 						mBrowserController.showSelectedTab(mId);
 				}
-				
+
 			});
 		}
 
