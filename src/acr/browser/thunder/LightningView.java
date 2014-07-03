@@ -4,11 +4,19 @@
 
 package acr.browser.thunder;
 
+import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.InetSocketAddress;
+import java.net.Proxy;
 import java.net.URISyntaxException;
+import java.net.URL;
+
+import org.apache.http.util.ByteArrayBuffer;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -643,7 +651,113 @@ public class LightningView {
 						"text/plain", "utf-8", EMPTY);
 				return response;
 			}
-			return super.shouldInterceptRequest(view, url);
+			boolean useProxy = mPreferences.getBoolean(PreferenceConstants.USE_PROXY, false);
+			boolean mDoLeakHardening = false;
+			
+			if (!useProxy)
+				return null;
+			
+			if (!mDoLeakHardening)
+				return null;
+			
+			//now we are going to proxy!
+			try
+			{
+			
+
+				URL uURl = new URL(url);
+				
+				Proxy proxy = null;
+				
+				String host = mPreferences.getString(PreferenceConstants.USE_PROXY_HOST, "localhost");
+				int port = mPreferences.getInt(PreferenceConstants.USE_PROXY_PORT, 8118);
+				proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress(host, port));
+				
+				HttpURLConnection.setFollowRedirects(true);
+				HttpURLConnection conn = (HttpURLConnection)uURl.openConnection(proxy);				
+				conn.setInstanceFollowRedirects(true);
+				conn.setRequestProperty("User-Agent", mSettings.getUserAgentString());				
+				
+				//conn.setRequestProperty("Transfer-Encoding", "chunked");
+				//conn.setUseCaches(false);
+				
+				final int bufferSize = 1024 * 32;
+				conn.setChunkedStreamingMode(bufferSize);
+
+				String cType = conn.getContentType();
+				String cEnc = conn.getContentEncoding();				
+				int connLen = conn.getContentLength();
+				
+				
+				if (cType != null)
+				{
+					String[] ctArray = cType.split(";");
+					cType = ctArray[0].trim();
+				
+					if (cEnc == null && ctArray.length > 1)
+					{
+						cEnc = ctArray[1];
+						if (cEnc.indexOf('=')!=-1)
+							cEnc = cEnc.split("=")[1].trim();
+					}
+				}
+				
+				if (connLen <= 0)
+					connLen = 2048;
+				
+				if (cType != null && cType.startsWith("text"))
+				{
+					InputStream fStream = null;
+					
+					BufferedInputStream bis = new BufferedInputStream(conn.getInputStream());
+				    ByteArrayBuffer baf = new ByteArrayBuffer(connLen);
+				    int read = 0;
+				    int bufSize = 2048;
+				    byte[] buffer = new byte[bufSize];
+				    while(true){
+				          read = bis.read(buffer);
+				          if(read==-1){
+				               break;
+				          }
+				          baf.append(buffer, 0, read);
+				    }
+				    byte[] plainText = baf.toByteArray();
+				    
+					fStream = new ByteArrayInputStream(plainText);
+					
+					fStream = new ReplacingInputStream(new ByteArrayInputStream(plainText),"poster=".getBytes(),"foo=".getBytes());
+					fStream = new ReplacingInputStream(fStream,"Poster=".getBytes(),"foo=".getBytes());
+					fStream = new ReplacingInputStream(fStream,"Poster=".getBytes(),"foo=".getBytes());
+					fStream = new ReplacingInputStream(fStream,".poster".getBytes(),".foo".getBytes());
+					fStream = new ReplacingInputStream(fStream,"\"poster\"".getBytes(),"\"foo\"".getBytes());					
+					
+					WebResourceResponse response = new WebResourceResponse(
+							cType, cEnc, fStream);
+					
+					return response;
+				}/**
+				else if (mDoLeakHardening)
+				{
+					WebResourceResponse response = new WebResourceResponse(
+							cType, cEnc, conn.getInputStream());
+					
+					return response;
+
+				}*/
+				else
+				{
+					return null; //let webkit handle it
+				}
+			}
+			catch (Exception e)
+			{
+				Log.e("Lightning","Error filtering stream",e);
+				ByteArrayInputStream EMPTY = new ByteArrayInputStream(
+						"".getBytes());
+				WebResourceResponse response = new WebResourceResponse(
+						"text/plain", "utf-8", EMPTY);
+				return response;
+			}
 		}
 
 		@Override

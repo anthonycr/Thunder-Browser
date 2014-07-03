@@ -27,6 +27,7 @@
         android:targetSdkVersion="19" />
 
     <application
+        android:name="acr.browser.thunder.BrowserApp"
         android:allowBackup="true"
         android:hardwareAccelerated="true"
         android:icon="@drawable/ic_launcher"

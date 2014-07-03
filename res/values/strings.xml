@@ -156,5 +156,8 @@
     <string name="hint_password">Password</string>
     <string name="google_suggestions">Search Suggestions</string>
     <string name="powered_by_google">Powered by Google</string>
+    <string name="use_tor_prompt">It looks like you have Orbot installed. Do you want to use Tor?</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
 
 </resources>

@@ -3,6 +3,9 @@
  */
 package acr.browser.thunder;
 
+import info.guardianproject.onionkit.ui.OrbotHelper;
+import info.guardianproject.onionkit.web.WebkitProxy;
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -15,16 +18,12 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
-
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.Message;
 import android.provider.Browser;
 import android.app.Activity;
@@ -40,7 +39,6 @@ import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
-import android.database.sqlite.SQLiteMisuseException;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
@@ -80,7 +78,6 @@ import android.widget.LinearLayout;
 import android.widget.AutoCompleteTextView;
 import android.widget.PopupMenu;
 import android.widget.RelativeLayout;
-import android.widget.SimpleAdapter;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.PopupMenu.OnMenuItemClickListener;
 import android.widget.TextView.OnEditorActionListener;
@@ -1375,8 +1372,82 @@ public class BrowserActivity extends Activity implements BrowserController {
 		}
 
 		initializeSearchSuggestions(mSearch);
-
 		initializeTabs();
+
+		boolean useProxy = mPreferences.getBoolean(
+				PreferenceConstants.USE_PROXY, false);
+
+		// if (useProxy)
+		// initializeTor();
+		// else
+		checkForTor();
+	}
+
+	/*
+	 * If Orbot/Tor is installed, prompt the user if they want to enable
+	 * proxying for this session
+	 */
+	public boolean checkForTor() {
+
+		OrbotHelper oh = new OrbotHelper(this);
+		if (oh.isOrbotInstalled()) {
+			DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					switch (which) {
+					case DialogInterface.BUTTON_POSITIVE:
+
+						mPreferences
+								.edit()
+								.putBoolean(PreferenceConstants.USE_PROXY, true)
+								.apply();
+
+						initializeTor();
+
+						break;
+
+					case DialogInterface.BUTTON_NEGATIVE:
+
+						mPreferences
+								.edit()
+								.putBoolean(PreferenceConstants.USE_PROXY,
+										false).apply();
+						break;
+					}
+				}
+			};
+
+			AlertDialog.Builder builder = new AlertDialog.Builder(this);
+			builder.setMessage(R.string.use_tor_prompt)
+					.setPositiveButton(R.string.yes, dialogClickListener)
+					.setNegativeButton(R.string.no, dialogClickListener).show();
+
+			return true;
+		}
+
+		return false;
+	}
+
+	/*
+	 * Initialize WebKit Proxying for Tor
+	 */
+	public void initializeTor() {
+
+		OrbotHelper oh = new OrbotHelper(this);
+		if (!oh.isOrbotRunning())
+			oh.requestOrbotStart(this);
+
+		WebkitProxy wkp = new WebkitProxy();
+		try {
+			String host = mPreferences.getString(
+					PreferenceConstants.USE_PROXY_HOST, "localhost");
+			int port = mPreferences.getInt(PreferenceConstants.USE_PROXY_PORT,
+					8118);
+			wkp.setProxy("acr.browser.lightning.BrowserApp",
+					getApplicationContext(), host, port);
+		} catch (Exception e) {
+			Log.d("Lightning", "error enabling web proxying", e);
+		}
 	}
 
 	private synchronized void initializeSearchSuggestions(
