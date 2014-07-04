@@ -627,13 +627,10 @@ public class LightningView {
 
 		@Override
 		public void onPageStarted(WebView view, String url, Bitmap favicon) {
-			Log.i("Thunder: ", url);
 			if (!mSettings.getUseWideViewPort()) {
 				mSettings.setUseWideViewPort(mWideViewPort);
 			}
-			Log.i("Thunder: ", isShown() + "");
 			if (isShown()) {
-				Log.i("Thunder: setUrl", url);
 				mBrowserController.updateUrl(url);
 				mBrowserController.showActionBar();
 			}
@@ -645,7 +642,6 @@ public class LightningView {
 		public WebResourceResponse shouldInterceptRequest(WebView view,
 				String url) {
 			if (mAdBlock.isAd(url)) {
-				Log.i("Blocked Domain:", url);
 				ByteArrayInputStream EMPTY = new ByteArrayInputStream(
 						"".getBytes());
 				WebResourceResponse response = new WebResourceResponse(
@@ -661,10 +657,10 @@ public class LightningView {
 
 			if (!mDoLeakHardening)
 				return null;
-
+			Log.i(Constants.LOGTAG, "yolo -1");
 			// now we are going to proxy!
 			try {
-
+				Log.i(Constants.LOGTAG, "yolo 0");
 				URL uURl = new URL(url);
 
 				Proxy proxy = null;
@@ -741,7 +737,7 @@ public class LightningView {
 
 					WebResourceResponse response = new WebResourceResponse(
 							cType, cEnc, fStream);
-
+					Log.i(Constants.LOGTAG, "yolo");
 					return response;
 				}/**
 				 * else if (mDoLeakHardening) { WebResourceResponse response =
@@ -752,7 +748,9 @@ public class LightningView {
 				 * }
 				 */
 				else {
+					Log.i(Constants.LOGTAG, "WHYYYYY");
 					return null; // let webkit handle it
+					
 				}
 			} catch (Exception e) {
 				Log.e(Constants.LOGTAG, "Error filtering stream", e);
