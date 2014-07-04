@@ -35,7 +35,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.database.Cursor;
-import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.graphics.Bitmap;
@@ -262,7 +261,7 @@ public class IncognitoActivity extends Activity implements BrowserController {
 		if (mCustomView == null || mCustomViewCallback == null
 				|| mCurrentView == null)
 			return;
-		Log.i("Lightning", "onHideCustomView");
+		Log.i(Constants.LOGTAG, "onHideCustomView");
 		mCurrentView.setVisibility(View.VISIBLE);
 		mCustomView.setKeepScreenOn(false);
 		setFullscreen(mPreferences.getBoolean(
@@ -410,99 +409,52 @@ public class IncognitoActivity extends Activity implements BrowserController {
 				alert.show();
 			}
 		} else if (url != null) {
-			if (url != null) {
-				if (result != null) {
-					if (result.getType() == HitTestResult.SRC_IMAGE_ANCHOR_TYPE
-							|| result.getType() == HitTestResult.IMAGE_TYPE) {
-						DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
-							@Override
-							public void onClick(DialogInterface dialog,
-									int which) {
-								switch (which) {
-								case DialogInterface.BUTTON_POSITIVE: {
-									newTab(false, url);
-									break;
-								}
-								case DialogInterface.BUTTON_NEGATIVE: {
-									mCurrentView.loadUrl(url);
-									break;
-								}
-								case DialogInterface.BUTTON_NEUTRAL: {
-									if (API > 8) {
-										Utils.downloadFile(mActivity, url,
-												mCurrentView.getUserAgent(),
-												"attachment", false);
-									}
-									break;
-								}
-								}
+			if (result != null) {
+				if (result.getType() == HitTestResult.SRC_IMAGE_ANCHOR_TYPE
+						|| result.getType() == HitTestResult.IMAGE_TYPE) {
+					DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+						@Override
+						public void onClick(DialogInterface dialog, int which) {
+							switch (which) {
+							case DialogInterface.BUTTON_POSITIVE: {
+								newTab(false, url);
+								break;
 							}
-						};
-
-						AlertDialog.Builder builder = new AlertDialog.Builder(
-								mActivity); // dialog
-						builder.setTitle(url.replace(Constants.HTTP, ""))
-								.setMessage(
-										getResources().getString(
-												R.string.dialog_image))
-								.setPositiveButton(
-										getResources().getString(
-												R.string.action_new_tab),
-										dialogClickListener)
-								.setNegativeButton(
-										getResources().getString(
-												R.string.action_open),
-										dialogClickListener)
-								.setNeutralButton(
-										getResources().getString(
-												R.string.action_download),
-										dialogClickListener).show();
-
-					} else {
-						DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
-							@Override
-							public void onClick(DialogInterface dialog,
-									int which) {
-								switch (which) {
-								case DialogInterface.BUTTON_POSITIVE: {
-									newTab(false, url);
-									break;
-								}
-								case DialogInterface.BUTTON_NEGATIVE: {
-									mCurrentView.loadUrl(url);
-									break;
-								}
-								case DialogInterface.BUTTON_NEUTRAL: {
-									ClipboardManager clipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
-									ClipData clip = ClipData.newPlainText(
-											"label", url);
-									clipboard.setPrimaryClip(clip);
-
-									break;
-								}
-								}
+							case DialogInterface.BUTTON_NEGATIVE: {
+								mCurrentView.loadUrl(url);
+								break;
 							}
-						};
+							case DialogInterface.BUTTON_NEUTRAL: {
+								if (API > 8) {
+									Utils.downloadFile(mActivity, url,
+											mCurrentView.getUserAgent(),
+											"attachment", false);
+								}
+								break;
+							}
+							}
+						}
+					};
 
-						AlertDialog.Builder builder = new AlertDialog.Builder(
-								mActivity); // dialog
-						builder.setTitle(url)
-								.setMessage(
-										getResources().getString(
-												R.string.dialog_link))
-								.setPositiveButton(
-										getResources().getString(
-												R.string.action_new_tab),
-										dialogClickListener)
-								.setNegativeButton(
-										getResources().getString(
-												R.string.action_open),
-										dialogClickListener)
-								.setNeutralButton(
-										getResources().getString(
-												R.string.action_copy),
-										dialogClickListener).show();
-					}
+					AlertDialog.Builder builder = new AlertDialog.Builder(
+							mActivity); // dialog
+					builder.setTitle(url.replace(Constants.HTTP, ""))
+							.setMessage(
+									getResources().getString(
+											R.string.dialog_image))
+							.setPositiveButton(
+									getResources().getString(
+											R.string.action_new_tab),
+									dialogClickListener)
+							.setNegativeButton(
+									getResources().getString(
+											R.string.action_open),
+									dialogClickListener)
+							.setNeutralButton(
+									getResources().getString(
+											R.string.action_download),
+									dialogClickListener).show();
+
 				} else {
 					DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
 						@Override
@@ -547,6 +499,44 @@ public class IncognitoActivity extends Activity implements BrowserController {
 											R.string.action_copy),
 									dialogClickListener).show();
 				}
+			} else {
+				DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						switch (which) {
+						case DialogInterface.BUTTON_POSITIVE: {
+							newTab(false, url);
+							break;
+						}
+						case DialogInterface.BUTTON_NEGATIVE: {
+							mCurrentView.loadUrl(url);
+							break;
+						}
+						case DialogInterface.BUTTON_NEUTRAL: {
+							ClipboardManager clipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
+							ClipData clip = ClipData.newPlainText("label", url);
+							clipboard.setPrimaryClip(clip);
+
+							break;
+						}
+						}
+					}
+				};
+
+				AlertDialog.Builder builder = new AlertDialog.Builder(mActivity); // dialog
+				builder.setTitle(url)
+						.setMessage(
+								getResources().getString(R.string.dialog_link))
+						.setPositiveButton(
+								getResources().getString(
+										R.string.action_new_tab),
+								dialogClickListener)
+						.setNegativeButton(
+								getResources().getString(R.string.action_open),
+								dialogClickListener)
+						.setNeutralButton(
+								getResources().getString(R.string.action_copy),
+								dialogClickListener).show();
 			}
 		} else if (result != null) {
 			if (result.getExtra() != null) {
@@ -831,7 +821,7 @@ public class IncognitoActivity extends Activity implements BrowserController {
 			if (mPreferences.getBoolean(PreferenceConstants.CLEAR_CACHE_EXIT,
 					false) && mCurrentView != null) {
 				mCurrentView.clearCache(true);
-				Log.i("Lightning", "Cache Cleared");
+				Log.i(Constants.LOGTAG, "Cache Cleared");
 
 			}
 			mCurrentView = null;
@@ -1413,7 +1403,7 @@ public class IncognitoActivity extends Activity implements BrowserController {
 	}
 
 	private synchronized void newTab(boolean show, String url) {
-		Log.i("Thunder", "new Tab");
+		Log.i(Constants.LOGTAG, "new Tab");
 		mIsNewIntent = false;
 		LightningView view = new LightningView(mActivity, url);
 		mWebViewList.add(view);
@@ -1515,7 +1505,7 @@ public class IncognitoActivity extends Activity implements BrowserController {
 			}
 		}
 
-		Log.i("Thunder", "Tab Deleted");
+		Log.i(Constants.LOGTAG, "Tab Deleted");
 	}
 
 	private synchronized void animateTabRemoval(final TextView view,

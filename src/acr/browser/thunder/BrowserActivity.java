@@ -230,11 +230,13 @@ public class BrowserActivity extends Activity implements BrowserController {
 					cursor.close();
 					cursor = null;
 				} catch (IllegalStateException e) {
-					Log.e("Lightning", "IllegalStateException in updateHistory");
+					Log.e(Constants.LOGTAG,
+							"IllegalStateException in updateHistory");
 				} catch (NullPointerException e) {
-					Log.e("Lightning", "NullPointerException in updateHistory");
+					Log.e(Constants.LOGTAG,
+							"NullPointerException in updateHistory");
 				} catch (SQLiteException e) {
-					Log.e("Lightning", "SQLiteException in updateHistory");
+					Log.e(Constants.LOGTAG, "SQLiteException in updateHistory");
 				}
 			}
 		};
@@ -321,7 +323,7 @@ public class BrowserActivity extends Activity implements BrowserController {
 		if (mCustomView == null || mCustomViewCallback == null
 				|| mCurrentView == null)
 			return;
-		Log.i("Lightning", "onHideCustomView");
+		Log.i(Constants.LOGTAG, "onHideCustomView");
 		mCurrentView.setVisibility(View.VISIBLE);
 		mCustomView.setKeepScreenOn(false);
 		setFullscreen(mPreferences.getBoolean(
@@ -469,99 +471,52 @@ public class BrowserActivity extends Activity implements BrowserController {
 				alert.show();
 			}
 		} else if (url != null) {
-			if (url != null) {
-				if (result != null) {
-					if (result.getType() == HitTestResult.SRC_IMAGE_ANCHOR_TYPE
-							|| result.getType() == HitTestResult.IMAGE_TYPE) {
-						DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
-							@Override
-							public void onClick(DialogInterface dialog,
-									int which) {
-								switch (which) {
-								case DialogInterface.BUTTON_POSITIVE: {
-									newTab(false, url);
-									break;
-								}
-								case DialogInterface.BUTTON_NEGATIVE: {
-									mCurrentView.loadUrl(url);
-									break;
-								}
-								case DialogInterface.BUTTON_NEUTRAL: {
-									if (API > 8) {
-										Utils.downloadFile(mActivity, url,
-												mCurrentView.getUserAgent(),
-												"attachment", false);
-									}
-									break;
-								}
-								}
+			if (result != null) {
+				if (result.getType() == HitTestResult.SRC_IMAGE_ANCHOR_TYPE
+						|| result.getType() == HitTestResult.IMAGE_TYPE) {
+					DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+						@Override
+						public void onClick(DialogInterface dialog, int which) {
+							switch (which) {
+							case DialogInterface.BUTTON_POSITIVE: {
+								newTab(false, url);
+								break;
 							}
-						};
-
-						AlertDialog.Builder builder = new AlertDialog.Builder(
-								mActivity); // dialog
-						builder.setTitle(url.replace(Constants.HTTP, ""))
-								.setMessage(
-										getResources().getString(
-												R.string.dialog_image))
-								.setPositiveButton(
-										getResources().getString(
-												R.string.action_new_tab),
-										dialogClickListener)
-								.setNegativeButton(
-										getResources().getString(
-												R.string.action_open),
-										dialogClickListener)
-								.setNeutralButton(
-										getResources().getString(
-												R.string.action_download),
-										dialogClickListener).show();
-
-					} else {
-						DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
-							@Override
-							public void onClick(DialogInterface dialog,
-									int which) {
-								switch (which) {
-								case DialogInterface.BUTTON_POSITIVE: {
-									newTab(false, url);
-									break;
-								}
-								case DialogInterface.BUTTON_NEGATIVE: {
-									mCurrentView.loadUrl(url);
-									break;
-								}
-								case DialogInterface.BUTTON_NEUTRAL: {
-									ClipboardManager clipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
-									ClipData clip = ClipData.newPlainText(
-											"label", url);
-									clipboard.setPrimaryClip(clip);
-
-									break;
-								}
-								}
+							case DialogInterface.BUTTON_NEGATIVE: {
+								mCurrentView.loadUrl(url);
+								break;
 							}
-						};
+							case DialogInterface.BUTTON_NEUTRAL: {
+								if (API > 8) {
+									Utils.downloadFile(mActivity, url,
+											mCurrentView.getUserAgent(),
+											"attachment", false);
+								}
+								break;
+							}
+							}
+						}
+					};
 
-						AlertDialog.Builder builder = new AlertDialog.Builder(
-								mActivity); // dialog
-						builder.setTitle(url)
-								.setMessage(
-										getResources().getString(
-												R.string.dialog_link))
-								.setPositiveButton(
-										getResources().getString(
-												R.string.action_new_tab),
-										dialogClickListener)
-								.setNegativeButton(
-										getResources().getString(
-												R.string.action_open),
-										dialogClickListener)
-								.setNeutralButton(
-										getResources().getString(
-												R.string.action_copy),
-										dialogClickListener).show();
-					}
+					AlertDialog.Builder builder = new AlertDialog.Builder(
+							mActivity); // dialog
+					builder.setTitle(url.replace(Constants.HTTP, ""))
+							.setMessage(
+									getResources().getString(
+											R.string.dialog_image))
+							.setPositiveButton(
+									getResources().getString(
+											R.string.action_new_tab),
+									dialogClickListener)
+							.setNegativeButton(
+									getResources().getString(
+											R.string.action_open),
+									dialogClickListener)
+							.setNeutralButton(
+									getResources().getString(
+											R.string.action_download),
+									dialogClickListener).show();
+
 				} else {
 					DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
 						@Override
@@ -606,6 +561,44 @@ public class BrowserActivity extends Activity implements BrowserController {
 											R.string.action_copy),
 									dialogClickListener).show();
 				}
+			} else {
+				DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						switch (which) {
+						case DialogInterface.BUTTON_POSITIVE: {
+							newTab(false, url);
+							break;
+						}
+						case DialogInterface.BUTTON_NEGATIVE: {
+							mCurrentView.loadUrl(url);
+							break;
+						}
+						case DialogInterface.BUTTON_NEUTRAL: {
+							ClipboardManager clipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
+							ClipData clip = ClipData.newPlainText("label", url);
+							clipboard.setPrimaryClip(clip);
+
+							break;
+						}
+						}
+					}
+				};
+
+				AlertDialog.Builder builder = new AlertDialog.Builder(mActivity); // dialog
+				builder.setTitle(url)
+						.setMessage(
+								getResources().getString(R.string.dialog_link))
+						.setPositiveButton(
+								getResources().getString(
+										R.string.action_new_tab),
+								dialogClickListener)
+						.setNegativeButton(
+								getResources().getString(R.string.action_open),
+								dialogClickListener)
+						.setNeutralButton(
+								getResources().getString(R.string.action_copy),
+								dialogClickListener).show();
 			}
 		} else if (result != null) {
 			if (result.getExtra() != null) {
@@ -890,7 +883,7 @@ public class BrowserActivity extends Activity implements BrowserController {
 			if (mPreferences.getBoolean(PreferenceConstants.CLEAR_CACHE_EXIT,
 					false) && mCurrentView != null) {
 				mCurrentView.clearCache(true);
-				Log.i("Lightning", "Cache Cleared");
+				Log.i(Constants.LOGTAG, "Cache Cleared");
 
 			}
 			mCurrentView = null;
@@ -1443,10 +1436,10 @@ public class BrowserActivity extends Activity implements BrowserController {
 					PreferenceConstants.USE_PROXY_HOST, "localhost");
 			int port = mPreferences.getInt(PreferenceConstants.USE_PROXY_PORT,
 					8118);
-			wkp.setProxy("acr.browser.lightning.BrowserApp",
+			wkp.setProxy("acr.browser.thunder.BrowserApp",
 					getApplicationContext(), host, port);
 		} catch (Exception e) {
-			Log.d("Lightning", "error enabling web proxying", e);
+			Log.d(Constants.LOGTAG, "error enabling web proxying", e);
 		}
 	}
 
@@ -1597,7 +1590,7 @@ public class BrowserActivity extends Activity implements BrowserController {
 	}
 
 	private synchronized void newTab(boolean show, String url) {
-		Log.i("Thunder", "new Tab");
+		Log.i(Constants.LOGTAG, "new Tab");
 		mIsNewIntent = false;
 		LightningView view = new LightningView(mActivity, url);
 		mWebViewList.add(view);
@@ -1724,7 +1717,7 @@ public class BrowserActivity extends Activity implements BrowserController {
 			}
 		}
 
-		Log.i("Thunder", "Tab Deleted");
+		Log.i(Constants.LOGTAG, "Tab Deleted");
 	}
 
 	private synchronized void animateTabRemoval(final TextView view,
