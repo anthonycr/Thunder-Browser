@@ -21,6 +21,7 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
@@ -1381,26 +1382,29 @@ public class BrowserActivity extends Activity implements BrowserController {
 	 * proxying for this session
 	 */
 	public boolean checkForTor() {
+		boolean useProxy = mPreferences.getBoolean(
+				PreferenceConstants.USE_PROXY, false);
 
 		OrbotHelper oh = new OrbotHelper(this);
-		if (oh.isOrbotInstalled()) {
+		if (oh.isOrbotInstalled()
+				&& !mPreferences.getBoolean(
+						PreferenceConstants.INITIAL_CHECK_FOR_TOR, false)) {
+			mEditPrefs.putBoolean(PreferenceConstants.INITIAL_CHECK_FOR_TOR,
+					true);
+			mEditPrefs.apply();
 			DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
 					switch (which) {
 					case DialogInterface.BUTTON_POSITIVE:
-
 						mPreferences
 								.edit()
 								.putBoolean(PreferenceConstants.USE_PROXY, true)
 								.apply();
 
 						initializeTor();
-
 						break;
-
 					case DialogInterface.BUTTON_NEGATIVE:
-
 						mPreferences
 								.edit()
 								.putBoolean(PreferenceConstants.USE_PROXY,
@@ -1416,9 +1420,14 @@ public class BrowserActivity extends Activity implements BrowserController {
 					.setNegativeButton(R.string.no, dialogClickListener).show();
 
 			return true;
+		} else if (oh.isOrbotInstalled() & useProxy == true) {
+			initializeTor();
+			return true;
+		} else {
+			mEditPrefs.putBoolean(PreferenceConstants.USE_PROXY, false);
+			mEditPrefs.apply();
+			return false;
 		}
-
-		return false;
 	}
 
 	/*
@@ -1429,7 +1438,7 @@ public class BrowserActivity extends Activity implements BrowserController {
 		OrbotHelper oh = new OrbotHelper(this);
 		if (!oh.isOrbotRunning())
 			oh.requestOrbotStart(this);
-
+		
 		WebkitProxy wkp = new WebkitProxy();
 		try {
 			String host = mPreferences.getString(
@@ -1441,6 +1450,7 @@ public class BrowserActivity extends Activity implements BrowserController {
 		} catch (Exception e) {
 			Log.d(Constants.LOGTAG, "error enabling web proxying", e);
 		}
+
 	}
 
 	private synchronized void initializeSearchSuggestions(
@@ -1586,7 +1596,17 @@ public class BrowserActivity extends Activity implements BrowserController {
 		CookieSyncManager.createInstance(this);
 		mCookieManager.setAcceptCookie(mPreferences.getBoolean(
 				PreferenceConstants.COOKIES, true));
-
+		if (mPreferences.getBoolean(PreferenceConstants.USE_PROXY, false)) {
+			initializeTor();
+		} else {
+			try {
+				WebkitProxy.resetProxy("acr.browser.thunder.BrowserApp",
+						getApplicationContext());
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 	}
 
 	private synchronized void newTab(boolean show, String url) {
@@ -1759,7 +1779,14 @@ public class BrowserActivity extends Activity implements BrowserController {
 			}
 
 		});
-		view.startAnimation(mRemoveTab);
+		new Runnable(){
+
+			@Override
+			public void run() {
+				view.startAnimation(mRemoveTab);
+			}
+		
+		}.run();
 	}
 
 	private synchronized void animateTabAddition(final LightningView view,
