@@ -66,6 +66,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
 import android.webkit.ValueCallback;
+import android.webkit.WebViewDatabase;
 import android.webkit.WebChromeClient.CustomViewCallback;
 import android.webkit.WebIconDatabase;
 import android.webkit.WebView.HitTestResult;
@@ -88,59 +89,60 @@ import android.widget.VideoView;
 
 public class BrowserActivity extends Activity implements BrowserController {
 
-	private static Activity mActivity;
-	private static Context mContext;
-	private static List<LightningView> mWebViewList = new ArrayList<LightningView>();
-	private static List<TextView> mTabList = new ArrayList<TextView>();
-	private static List<Integer> mIdList = new ArrayList<Integer>();
-	private static LinearLayout mNewTab;
-	private static ImageView mBack;
-	private static ImageView mForward;
-	private static ImageView mOptions;
-	private static LinearLayout mTabLayout;
-	private static FrameLayout mBrowserFrame;
-	private static AutoCompleteTextView mSearch;
-	private static ProgressBar mProgressBar;
-	private static LightningView mCurrentView = null;
-	private static int mIdGenerator = 0;
-	private static String mSearchText;
-	private static PopupMenu mMenu;
-	private static MenuInflater mMenuInflater;
-	private static List<HistoryItem> mBookmarkList;
-	private static boolean mSystemBrowser = false;
-	private static DatabaseHandler mHistoryHandler;
-	private static SQLiteDatabase mHistoryDatabase;
-	private static SharedPreferences mPreferences;
-	private static Editor mEditPrefs;
-	private static ValueCallback<Uri> mUploadMessage;
-	private static ClickHandler mClickHandler;
-	private static View mCustomView;
-	private static int mOriginalOrientation;
-	private static FullscreenHolder mFullscreenContainer;
-	private static CustomViewCallback mCustomViewCallback;
-	private static final FrameLayout.LayoutParams COVER_SCREEN_PARAMS = new FrameLayout.LayoutParams(
+	private Activity mActivity;
+	private Context mContext;
+	private List<LightningView> mWebViewList = new ArrayList<LightningView>();
+	private List<TextView> mTabList = new ArrayList<TextView>();
+	private List<Integer> mIdList = new ArrayList<Integer>();
+	private LinearLayout mNewTab;
+	private ImageView mBack;
+	private ImageView mForward;
+	private ImageView mOptions;
+	private LinearLayout mTabLayout;
+	private FrameLayout mBrowserFrame;
+	private AutoCompleteTextView mSearch;
+	private ProgressBar mProgressBar;
+	private LightningView mCurrentView = null;
+	private int mIdGenerator = 0;
+	private String mSearchText;
+	private PopupMenu mMenu;
+	private MenuInflater mMenuInflater;
+	private List<HistoryItem> mBookmarkList;
+	private boolean mSystemBrowser = false;
+	private DatabaseHandler mHistoryHandler;
+	private SQLiteDatabase mHistoryDatabase;
+	private SharedPreferences mPreferences;
+	private Editor mEditPrefs;
+	private ValueCallback<Uri> mUploadMessage;
+	private ClickHandler mClickHandler;
+	private View mCustomView;
+	private int mOriginalOrientation;
+	private FullscreenHolder mFullscreenContainer;
+	private CustomViewCallback mCustomViewCallback;
+	private final FrameLayout.LayoutParams COVER_SCREEN_PARAMS = new FrameLayout.LayoutParams(
 			ViewGroup.LayoutParams.MATCH_PARENT,
 			ViewGroup.LayoutParams.MATCH_PARENT);
-	private static final int API = android.os.Build.VERSION.SDK_INT;
-	private static Bitmap mDefaultVideoPoster;
-	private static View mVideoProgressView;
-	private static CookieManager mCookieManager;
-	private static boolean mFullScreen;
-	private static Drawable mDeleteIcon;
-	private static Drawable mRefreshIcon;
-	private static Drawable mIcon;
-	private static boolean mIsNewIntent = false;
-	private static String mHomepage;
-	private static Animation mAddTab;
-	private static Animation mRemoveTab;
-	private static RelativeLayout mParentBackground;
-	private static RelativeLayout mUrlBar;
-	private static Animation mSlideUpAnimation;
-	private static Animation mSlideDownAnimation;
-	private static HorizontalScrollView mTabScrollView;
-	private static VideoView mVideoView;
+	private final int API = android.os.Build.VERSION.SDK_INT;
+	private Bitmap mDefaultVideoPoster;
+	private View mVideoProgressView;
+	private CookieManager mCookieManager;
+	private boolean mFullScreen;
+	private Drawable mDeleteIcon;
+	private Drawable mRefreshIcon;
+	private Drawable mIcon;
+	private boolean mIsNewIntent = false;
+	private String mHomepage;
+	private Animation mAddTab;
+	private Animation mRemoveTab;
+	private RelativeLayout mParentBackground;
+	private RelativeLayout mUrlBar;
+	private Animation mSlideUpAnimation;
+	private Animation mSlideDownAnimation;
+	private HorizontalScrollView mTabScrollView;
+	private VideoView mVideoView;
 	private static SearchAdapter mSearchAdapter;
-	private static boolean viewIsAnimating = false;
+	private boolean viewIsAnimating = false;
+	private boolean isIncognito = false;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -187,6 +189,10 @@ public class BrowserActivity extends Activity implements BrowserController {
 
 	@Override
 	public void updateHistory(final String title, final String url) {
+
+	}
+
+	public void addItemToHistory(final String title, final String url) {
 		Runnable update = new Runnable() {
 			@Override
 			public void run() {
@@ -247,6 +253,10 @@ public class BrowserActivity extends Activity implements BrowserController {
 
 			}
 		}
+	}
+
+	public void closeActivity() {
+		finish();
 	}
 
 	@Override
@@ -863,6 +873,31 @@ public class BrowserActivity extends Activity implements BrowserController {
 		return super.onKeyDown(keyCode, event);
 	}
 
+	public void clearHistory() {
+		this.deleteDatabase(DatabaseHandler.DATABASE_NAME);
+		WebViewDatabase m = WebViewDatabase.getInstance(this);
+		m.clearFormData();
+		m.clearHttpAuthUsernamePassword();
+		if (API < 18) {
+			m.clearUsernamePassword();
+			WebIconDatabase.getInstance().removeAllIcons();
+		}
+		if (mSystemBrowser) {
+			try {
+				Browser.clearHistory(getContentResolver());
+			} catch (NullPointerException ignored) {
+			}
+		}
+		SettingsController.setClearHistory(true);
+		Utils.trimCache(this);
+	}
+
+	public void clearCookies() {
+		CookieManager c = CookieManager.getInstance();
+		CookieSyncManager.createInstance(this);
+		c.removeAllCookie();
+	}
+
 	@Override
 	public synchronized void onBackPressed() {
 		showActionBar();
@@ -887,6 +922,18 @@ public class BrowserActivity extends Activity implements BrowserController {
 				Log.i(Constants.LOGTAG, "Cache Cleared");
 
 			}
+			if (mPreferences.getBoolean(PreferenceConstants.CLEAR_HISTORY_EXIT,
+					false) && !isIncognito()) {
+				clearHistory();
+				Log.i(Constants.LOGTAG, "History Cleared");
+
+			}
+			if (mPreferences.getBoolean(PreferenceConstants.CLEAR_COOKIES_EXIT,
+					false) && !isIncognito()) {
+				clearCookies();
+				Log.i(Constants.LOGTAG, "Cookies Cleared");
+
+			}
 			mCurrentView = null;
 			for (int n = 0; n < mWebViewList.size(); n++) {
 				if (mWebViewList.get(n) != null)
@@ -906,6 +953,10 @@ public class BrowserActivity extends Activity implements BrowserController {
 
 	@Override
 	protected void onNewIntent(Intent intent) {
+		super.onNewIntent(intent);
+	}
+
+	public void handleNewIntent(Intent intent) {
 		if (mCurrentView == null) {
 			initialize();
 		}
@@ -960,6 +1011,10 @@ public class BrowserActivity extends Activity implements BrowserController {
 			if (mHistoryHandler.isOpen())
 				mHistoryHandler.close();
 		}
+
+	}
+
+	public void saveOpenTabs() {
 		if (mPreferences
 				.getBoolean(PreferenceConstants.RESTORE_LOST_TABS, true)) {
 			String s = "";
@@ -1438,7 +1493,7 @@ public class BrowserActivity extends Activity implements BrowserController {
 		OrbotHelper oh = new OrbotHelper(this);
 		if (!oh.isOrbotRunning())
 			oh.requestOrbotStart(this);
-		
+
 		WebkitProxy wkp = new WebkitProxy();
 		try {
 			String host = mPreferences.getString(
@@ -1496,6 +1551,9 @@ public class BrowserActivity extends Activity implements BrowserController {
 
 	public synchronized void initializeTabs() {
 
+	}
+
+	public void restoreOrNewTab() {
 		String url = null;
 		if (getIntent() != null) {
 			url = getIntent().getDataString();
@@ -1530,7 +1588,6 @@ public class BrowserActivity extends Activity implements BrowserController {
 		} else {
 			newTab(true, url);
 		}
-
 	}
 
 	public static String[] getArray(String input) {
@@ -1592,10 +1649,7 @@ public class BrowserActivity extends Activity implements BrowserController {
 			break;
 		}
 
-		mCookieManager = CookieManager.getInstance();
-		CookieSyncManager.createInstance(this);
-		mCookieManager.setAcceptCookie(mPreferences.getBoolean(
-				PreferenceConstants.COOKIES, true));
+		updateCookiePreference();
 		if (mPreferences.getBoolean(PreferenceConstants.USE_PROXY, false)) {
 			initializeTor();
 		} else {
@@ -1609,7 +1663,11 @@ public class BrowserActivity extends Activity implements BrowserController {
 		}
 	}
 
-	private synchronized void newTab(boolean show, String url) {
+	public void updateCookiePreference() {
+
+	}
+
+	protected synchronized void newTab(boolean show, String url) {
 		Log.i(Constants.LOGTAG, "new Tab");
 		mIsNewIntent = false;
 		LightningView view = new LightningView(mActivity, url);
@@ -1719,7 +1777,7 @@ public class BrowserActivity extends Activity implements BrowserController {
 		} else {
 			if (mCurrentView.getUrl().startsWith(Constants.FILE)
 					|| mCurrentView.getUrl().equals(mHomepage)) {
-				moveTaskToBack(true);
+				closeActivity();
 			} else {
 				mWebViewList.remove(position);
 				mIdList.remove(position);
@@ -1727,6 +1785,20 @@ public class BrowserActivity extends Activity implements BrowserController {
 						PreferenceConstants.CLEAR_CACHE_EXIT, false)
 						&& mCurrentView != null) {
 					mCurrentView.clearCache(true);
+				}
+				if (mPreferences.getBoolean(
+						PreferenceConstants.CLEAR_HISTORY_EXIT, false)
+						&& !isIncognito()) {
+					clearHistory();
+					Log.i(Constants.LOGTAG, "History Cleared");
+
+				}
+				if (mPreferences.getBoolean(
+						PreferenceConstants.CLEAR_COOKIES_EXIT, false)
+						&& !isIncognito()) {
+					clearCookies();
+					Log.i(Constants.LOGTAG, "Cookies Cleared");
+
 				}
 				if (reference != null) {
 					reference.pauseTimers();
@@ -1738,6 +1810,10 @@ public class BrowserActivity extends Activity implements BrowserController {
 		}
 
 		Log.i(Constants.LOGTAG, "Tab Deleted");
+	}
+
+	public boolean isIncognito() {
+		return false;
 	}
 
 	private synchronized void animateTabRemoval(final TextView view,
@@ -1763,7 +1839,7 @@ public class BrowserActivity extends Activity implements BrowserController {
 				});
 				if (mIsNewIntent && isShown) {
 					mIsNewIntent = false;
-					moveTaskToBack(true);
+					closeActivity();
 				}
 
 			}
@@ -1779,13 +1855,13 @@ public class BrowserActivity extends Activity implements BrowserController {
 			}
 
 		});
-		new Runnable(){
+		new Runnable() {
 
 			@Override
 			public void run() {
 				view.startAnimation(mRemoveTab);
 			}
-		
+
 		}.run();
 	}
 
