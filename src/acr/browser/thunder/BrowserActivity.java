@@ -1543,7 +1543,7 @@ public class BrowserActivity extends Activity implements BrowserController {
 		});
 
 		getUrl.setSelectAllOnFocus(true);
-		mSearchAdapter = new SearchAdapter(mContext, false);
+		mSearchAdapter = new SearchAdapter(mContext, isIncognito());
 		getUrl.setAdapter(mSearchAdapter);
 	}
 
