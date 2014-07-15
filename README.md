@@ -27,7 +27,9 @@
 
 * Google search suggestions
 
-####Permissions Requested and Explained
+* Orbot Proxy support 
+
+####Permissions
 
 * ````INTERNET````: For accessing the web
 
@@ -41,9 +43,18 @@
 
 * ````WRITE_HISTORY_BOOKMARKS````: To synchronize history and bookmarks between the stock browser and Thunder
 
+* ````ACCESS_NETWORK_STATE````: Required for the WebView to work for some OEM versions of WebKit
+
 ####The Code
 * Please contribute code back if you can. The code isn't perfect.
 * Please add translations/translation fixes as you see need
+
+####Setting Up the Project
+Due to the inclusion of the netcipher library for Orbot proxy support, importing the project will show you some errors. To fix this, first run the following git command in your project folder (NOTE: You need the git command installed to use this):
+````
+git submodule update --init --recursive
+````
+Once you run that command, the IDE should automatically import netcipher and a couple submodules in as separate projects. Than you need to set the netcipher library project as a libary of the browser project however your IDE makes you do that. Once those steps are done, the project should be all set up and ready to go.
 
 ####License
 ````
