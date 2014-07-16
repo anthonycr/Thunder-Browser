@@ -34,9 +34,14 @@ public class IncognitoActivity extends BrowserActivity {
 	@Override
 	public synchronized void initializeTabs() {
 		super.initializeTabs();
-		//restoreOrNewTab();
+		// restoreOrNewTab();
 		newTab(true, null);
-		//if incognito mode use newTab(null, true); instead
+		// if incognito mode use newTab(null, true); instead
+	}
+
+	@Override
+	public int getMenu() {
+		return R.menu.incognito;
 	}
 
 	@Override
@@ -47,20 +52,20 @@ public class IncognitoActivity extends BrowserActivity {
 
 	@Override
 	protected void onNewIntent(Intent intent) {
-		//handleNewIntent(intent);
+		// handleNewIntent(intent);
 		super.onNewIntent(intent);
 	}
 
 	@Override
 	protected void onPause() {
 		super.onPause();
-		//saveOpenTabs();
+		// saveOpenTabs();
 	}
 
 	@Override
 	public void updateHistory(String title, String url) {
 		super.updateHistory(title, url);
-		//addItemToHistory(title, url);
+		// addItemToHistory(title, url);
 	}
 
 	@Override
@@ -72,7 +77,5 @@ public class IncognitoActivity extends BrowserActivity {
 	public void closeActivity() {
 		finish();
 	}
-	
-	
-	
+
 }

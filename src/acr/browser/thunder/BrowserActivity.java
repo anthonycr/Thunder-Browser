@@ -1225,7 +1225,7 @@ public class BrowserActivity extends Activity implements BrowserController {
 
 		});
 		mMenuInflater = mMenu.getMenuInflater();
-		mMenuInflater.inflate(R.menu.main, mMenu.getMenu());
+		mMenuInflater.inflate(getMenu(), mMenu.getMenu());
 		OnTouchListener drag = null;
 		if (API > 18) {
 			drag = mMenu.getDragToOpenListener();
@@ -1428,6 +1428,10 @@ public class BrowserActivity extends Activity implements BrowserController {
 		// initializeTor();
 		// else
 		checkForTor();
+	}
+
+	public int getMenu() {
+		return R.menu.main;
 	}
 
 	/*

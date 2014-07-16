@@ -35,7 +35,12 @@ public class MainActivity extends BrowserActivity {
 	public synchronized void initializeTabs() {
 		super.initializeTabs();
 		restoreOrNewTab();
-		//if incognito mode use newTab(null, true); instead
+		// if incognito mode use newTab(null, true); instead
+	}
+
+	@Override
+	public int getMenu() {
+		return R.menu.main;
 	}
 
 	@Override
@@ -71,7 +76,5 @@ public class MainActivity extends BrowserActivity {
 	public void closeActivity() {
 		moveTaskToBack(true);
 	}
-	
-	
-	
+
 }
