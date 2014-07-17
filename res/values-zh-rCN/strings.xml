@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Lightning+</string>
+    <string name="app_name">Thunder</string>
     <string name="drawer_open">打开导航抽屉</string>
     <string name="drawer_close">关闭导航抽屉</string>
     <string name="action_websearch">网页搜索</string>
@@ -111,4 +111,6 @@
     <string name="download_no_sdcard_dlg_msg">为正常下载此文件需要 USB 存储设备。</string>
     <string name="download_sdcard_busy_dlg_title">USB 存储不可用</string>
     <string name="download_sdcard_busy_dlg_msg">USB 存储设备目前正忙，为确保正常下载此文件请在通知栏中确认关闭 USB 大容量存储。</string>
+    <string name="folder_default">默认 UA</string>
+    <string name="folder_custom">自定义 UA</string>
 </resources>

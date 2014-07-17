@@ -1,8 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Copyright 2014 A.C.R. Development
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
 <resources>
 
     <string name="app_name">Thunder</string>
     <string name="drawer_open">Navigation-Drawer öffnen</string>
-    <string name="drawer_close">Navigation-Drawer schliessen</string>
+    <string name="drawer_close">Navigation-Drawer schließen</string>
     <string name="action_websearch">Websuche</string>
     <string name="action_refresh">Aktualisieren</string>
     <string name="action_new_tab">Neuer Tab</string>
@@ -128,7 +145,7 @@
     <string name="licenses">Open Source-Lizenzen</string>
     <string name="suggestion">Suche nach</string>
     <string name="block_ads">Werbung blockieren</string>
-    <string name="message_untrusted_certificate">Das Zertifikat dieser Webseite ist nicht vertrauenswürdig. Trozdem fortsetzen?</string>
+    <string name="message_untrusted_certificate">Das Zertifikat dieser Webseite ist nicht vertrauenswürdig. Trotzdem fortsetzen?</string>
     <string name="title_form_resubmission">Formularneuzustellung</string>
     <string name="message_form_resubmission">Daten erneut senden?</string>
     <string name="message_location">\nMeine Position verwenden?</string>
@@ -141,5 +158,6 @@
     <string name="powered_by_google">Unterstützt durch Google</string>
     <string name="title_adblock">Werbeblocker</string>
     <string name="message_adblock">Der Werbeblocker ist nur in Lightning Browser+ verfügbar und kann im Google Play Store gekauft werden!</string>
-
+    <string name="folder_default">Standard</string>
+    <string name="folder_custom">Andere</string>
 </resources>

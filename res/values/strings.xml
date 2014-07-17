@@ -156,12 +156,16 @@
     <string name="hint_password">Password</string>
     <string name="google_suggestions">Search Suggestions</string>
     <string name="powered_by_google">Powered by Google</string>
+    <string name="title_adblock">AdBlock</string>
+    <string name="message_adblock">AdBlock is currently only available in the browser\'s paid version, Lightning Browser+. It is available to download on Google Play.</string>
     <string name="enable_orbot">Enable Orbot</string>
     <string name="use_tor_prompt">It looks like you have Orbot installed. Do you want to use Tor?</string>
     <string name="install_orbot">Please install Orbot in order to proxy with Tor.</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
-    <string name="clear_history_exit">Clear history on exit</string>
     <string name="clear_cookies_exit">Clear cookies on exit</string>
-
+    <string name="clear_history_exit">Clear history on exit</string>
+    <string name="folder_default">Default</string>
+    <string name="folder_custom">Custom</string>
+    <string name="untitled">Untititled</string>
 </resources>
