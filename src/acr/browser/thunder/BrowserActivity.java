@@ -235,13 +235,13 @@ public class BrowserActivity extends Activity implements BrowserController {
 					cursor.close();
 					cursor = null;
 				} catch (IllegalStateException e) {
-					Log.e(Constants.LOGTAG,
+					Log.e(Constants.TAG,
 							"IllegalStateException in updateHistory");
 				} catch (NullPointerException e) {
-					Log.e(Constants.LOGTAG,
+					Log.e(Constants.TAG,
 							"NullPointerException in updateHistory");
 				} catch (SQLiteException e) {
-					Log.e(Constants.LOGTAG, "SQLiteException in updateHistory");
+					Log.e(Constants.TAG, "SQLiteException in updateHistory");
 				}
 			}
 		};
@@ -332,7 +332,7 @@ public class BrowserActivity extends Activity implements BrowserController {
 		if (mCustomView == null || mCustomViewCallback == null
 				|| mCurrentView == null)
 			return;
-		Log.i(Constants.LOGTAG, "onHideCustomView");
+		Log.i(Constants.TAG, "onHideCustomView");
 		mCurrentView.setVisibility(View.VISIBLE);
 		mCustomView.setKeepScreenOn(false);
 		setFullscreen(mPreferences.getBoolean(
@@ -917,19 +917,19 @@ public class BrowserActivity extends Activity implements BrowserController {
 			if (mPreferences.getBoolean(PreferenceConstants.CLEAR_CACHE_EXIT,
 					false) && mCurrentView != null) {
 				mCurrentView.clearCache(true);
-				Log.i(Constants.LOGTAG, "Cache Cleared");
+				Log.i(Constants.TAG, "Cache Cleared");
 
 			}
 			if (mPreferences.getBoolean(PreferenceConstants.CLEAR_HISTORY_EXIT,
 					false) && !isIncognito()) {
 				clearHistory();
-				Log.i(Constants.LOGTAG, "History Cleared");
+				Log.i(Constants.TAG, "History Cleared");
 
 			}
 			if (mPreferences.getBoolean(PreferenceConstants.CLEAR_COOKIES_EXIT,
 					false) && !isIncognito()) {
 				clearCookies();
-				Log.i(Constants.LOGTAG, "Cookies Cleared");
+				Log.i(Constants.TAG, "Cookies Cleared");
 
 			}
 			mCurrentView = null;
@@ -1168,7 +1168,7 @@ public class BrowserActivity extends Activity implements BrowserController {
 					newTab(true, null);
 					return true;
 				case R.id.action_incognito:
-					startActivity(new Intent(Constants.INCOGNITO_INTENT));
+					startActivity(new Intent(mContext, IncognitoActivity.class));
 					return true;
 				case R.id.action_share:
 					if (!mCurrentView.getUrl().startsWith(Constants.FILE)) {
@@ -1204,7 +1204,7 @@ public class BrowserActivity extends Activity implements BrowserController {
 					}
 					return true;
 				case R.id.action_settings:
-					startActivity(new Intent(Constants.SETTINGS_INTENT));
+					startActivity(new Intent(mContext, SettingsActivity.class));
 					return true;
 				case R.id.action_history:
 					openHistory();
@@ -1505,7 +1505,7 @@ public class BrowserActivity extends Activity implements BrowserController {
 			wkp.setProxy("acr.browser.thunder.BrowserApp",
 					getApplicationContext(), host, port);
 		} catch (Exception e) {
-			Log.d(Constants.LOGTAG, "error enabling web proxying", e);
+			Log.d(Constants.TAG, "error enabling web proxying", e);
 		}
 
 	}
@@ -1669,8 +1669,21 @@ public class BrowserActivity extends Activity implements BrowserController {
 
 	}
 
+	@Override
+	public void closeEmptyTab() {
+		if (mCurrentView != null
+				&& mCurrentView.getWebView().copyBackForwardList().getSize() == 0) {
+			closeCurrentTab();
+		}
+	}
+
+	private void closeCurrentTab() {
+		// deleteTab(mCurrentView.getId());
+		// don't delete the tab it will mess up the application stack
+	}
+
 	protected synchronized void newTab(boolean show, String url) {
-		Log.i(Constants.LOGTAG, "new Tab");
+		Log.i(Constants.TAG, "new Tab");
 		mIsNewIntent = false;
 		LightningView view = new LightningView(mActivity, url);
 		mWebViewList.add(view);
@@ -1792,14 +1805,14 @@ public class BrowserActivity extends Activity implements BrowserController {
 						PreferenceConstants.CLEAR_HISTORY_EXIT, false)
 						&& !isIncognito()) {
 					clearHistory();
-					Log.i(Constants.LOGTAG, "History Cleared");
+					Log.i(Constants.TAG, "History Cleared");
 
 				}
 				if (mPreferences.getBoolean(
 						PreferenceConstants.CLEAR_COOKIES_EXIT, false)
 						&& !isIncognito()) {
 					clearCookies();
-					Log.i(Constants.LOGTAG, "Cookies Cleared");
+					Log.i(Constants.TAG, "Cookies Cleared");
 
 				}
 				if (reference != null) {
@@ -1811,7 +1824,7 @@ public class BrowserActivity extends Activity implements BrowserController {
 			}
 		}
 
-		Log.i(Constants.LOGTAG, "Tab Deleted");
+		Log.i(Constants.TAG, "Tab Deleted");
 	}
 
 	public boolean isIncognito() {

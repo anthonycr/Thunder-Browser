@@ -50,4 +50,6 @@ public interface BrowserController {
 	public void deleteTab(int id);
 	
 	public boolean isActionBarShown();
+
+	public void closeEmptyTab();
 }
