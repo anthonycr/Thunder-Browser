@@ -22,33 +22,34 @@ public interface BrowserController {
 	public void openFileChooser(ValueCallback<Uri> uploadMsg);
 
 	public void update();
-	
+
 	public void onLongPress();
-	
-	public void onShowCustomView(View view, int requestedOrientation, CustomViewCallback callback);
-	
+
+	public void onShowCustomView(View view, int requestedOrientation,
+			CustomViewCallback callback);
+
 	public void onHideCustomView();
-	
+
 	public Bitmap getDefaultVideoPoster();
-	
+
 	public View getVideoLoadingProgressView();
-	
+
 	public void onCreateWindow(boolean isUserGesture, Message resultMsg);
-	
+
 	public Activity getActivity();
-	
+
 	public void hideActionBar();
-	
+
 	public void showActionBar();
-	
+
 	public void longClickPage(String url);
-	
+
 	public void openBookmarkPage(WebView view);
-	
+
 	public void showSelectedTab(int id);
 
 	public void deleteTab(int id);
-	
+
 	public boolean isActionBarShown();
 
 	public void closeEmptyTab();

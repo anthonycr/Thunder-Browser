@@ -10,7 +10,7 @@ public class Constants {
 	public Constants() {
 		// TODO Auto-generated constructor stub
 	}
-	
+
 	public static final String DESKTOP_USER_AGENT = "Mozilla/5.0 (Windows NT 6.2; WOW64) AppleWebKit/537.17 (KHTML, like Gecko) Chrome/20 Safari/537.17";
 	public static final String MOBILE_USER_AGENT = "Mozilla/5.0 (Linux; U; Android 4.2; en-us; Nexus 4 Build/JOP24G) AppleWebKit/534.30 (KHTML, like Gecko) Version/4.0 Mobile Safari/534.30";
 	public static final int API = android.os.Build.VERSION.SDK_INT;
@@ -27,13 +27,14 @@ public class Constants {
 	public static final String YANDEX_SEARCH = "http://yandex.ru/yandsearch?lr=21411&text=";
 	public static final String ADVANCED_SETTINGS_INTENT = "android.intent.action.THUNDER_ADVANCED_SETTINGS";
 	public static final String LICENSE_INTENT = "android.intent.action.THUNDER_LICENSE";
-	public static final String SETTINGS_INTENT = "android.intent.action.THUNDER_SETTINGS";	
+	public static final String SETTINGS_INTENT = "android.intent.action.THUNDER_SETTINGS";
 	public static final String INCOGNITO_INTENT = "android.intent.action.THUNDER_INCOGNITO";
-	public static final String EXTERNAL_STORAGE = Environment.getExternalStorageDirectory().toString();
+	public static final String EXTERNAL_STORAGE = Environment
+			.getExternalStorageDirectory().toString();
 	public static final String SEPARATOR = "\\|\\$\\|SEPARATOR\\|\\$\\|";
 	public static final String HTTP = "http://";
 	public static final String HTTPS = "https://";
 	public static final String FILE = "file://";
 	public static final String TAG = "Thunder";
-	
+
 }

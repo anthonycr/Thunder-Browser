@@ -33,21 +33,21 @@ public class HistoryItem implements Comparable<HistoryItem> {
 		this.mTitle = title;
 		this.mBitmap = null;
 	}
-	
+
 	// constructor
-		public HistoryItem(String url, String title, int imageId) {
-			this.mUrl = url;
-			this.mTitle = title;
-			this.mBitmap = null;
-			this.mImageId = imageId;
-		}
+	public HistoryItem(String url, String title, int imageId) {
+		this.mUrl = url;
+		this.mTitle = title;
+		this.mBitmap = null;
+		this.mImageId = imageId;
+	}
 
 	// getting ID
 	public int getId() {
 		return this.mId;
 	}
-	
-	public int getImageId(){
+
+	public int getImageId() {
 		return this.mImageId;
 	}
 
@@ -55,8 +55,8 @@ public class HistoryItem implements Comparable<HistoryItem> {
 	public void setID(int id) {
 		this.mId = id;
 	}
-	
-	public void setImageId(int id){
+
+	public void setImageId(int id) {
 		this.mImageId = id;
 	}
 

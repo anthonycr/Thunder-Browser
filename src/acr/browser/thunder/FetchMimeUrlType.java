@@ -104,7 +104,7 @@ class FetchUrlMimeType extends Thread {
        // Start the download
        DownloadManager manager = (DownloadManager) mContext.getSystemService(
                Context.DOWNLOAD_SERVICE);
-       manager.enqueue(mRequest);
-    }
+		manager.enqueue(mRequest);
+	}
 
 }

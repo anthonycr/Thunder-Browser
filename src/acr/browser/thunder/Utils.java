@@ -3,18 +3,6 @@
  */
 package acr.browser.thunder;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.List;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -24,11 +12,13 @@ import android.util.Log;
 import android.webkit.URLUtil;
 import android.widget.Toast;
 
+import java.io.*;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.List;
+
 public class Utils {
-
-	public Utils() {
-
-	}
 
 	public static void downloadFile(final Activity activity, final String url,
 			final String userAgent, final String contentDisposition,
@@ -112,6 +102,9 @@ public class Utils {
 		Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
 	}
 
+	/**
+	 * Returns the number of pixels corresponding to the passed density pixels
+	 */
 	public static int convertToDensityPixels(Context context, int densityPixels) {
 		float scale = context.getResources().getDisplayMetrics().density;
 		int pixels = (int) (densityPixels * scale + 0.5f);
@@ -152,7 +145,11 @@ public class Utils {
 		}
 		return bookmarks;
 	}
-	
+
+	public static String[] getArray(String input) {
+		return input.split("\\|\\$\\|SEPARATOR\\|\\$\\|");
+	}
+
 	public static void trimCache(Context context) {
 		try {
 			File dir = context.getCacheDir();
@@ -164,7 +161,7 @@ public class Utils {
 
 		}
 	}
-	
+
 	public static boolean deleteDir(File dir) {
 		if (dir != null && dir.isDirectory()) {
 			String[] children = dir.list();
@@ -178,5 +175,4 @@ public class Utils {
 		// The directory is now empty so delete it
 		return dir.delete();
 	}
-
 }

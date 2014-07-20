@@ -34,8 +34,8 @@ public class Tab extends LinearLayout {
 	public void setTitle(String title) {
 		mTitle.setText(title);
 	}
-	
-	public void setFavicon(Bitmap fav){
+
+	public void setFavicon(Bitmap fav) {
 		mFavicon.setImageBitmap(fav);
 	}
 

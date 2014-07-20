@@ -12,10 +12,11 @@ import android.webkit.URLUtil;
 
 public class LightningDownloadListener implements DownloadListener {
 	private Activity mActivity;
-	LightningDownloadListener(Activity activity){
+
+	LightningDownloadListener(Activity activity) {
 		mActivity = activity;
 	}
-	
+
 	@Override
 	public void onDownloadStart(final String url, final String userAgent,
 			final String contentDisposition, final String mimetype,
@@ -27,7 +28,8 @@ public class LightningDownloadListener implements DownloadListener {
 			public void onClick(DialogInterface dialog, int which) {
 				switch (which) {
 				case DialogInterface.BUTTON_POSITIVE: {
-					DownloadHandler.onDownloadStart(mActivity, url, userAgent, contentDisposition, mimetype, false);
+					DownloadHandler.onDownloadStart(mActivity, url, userAgent,
+							contentDisposition, mimetype, false);
 					break;
 				}
 				case DialogInterface.BUTTON_NEGATIVE: {
@@ -39,14 +41,18 @@ public class LightningDownloadListener implements DownloadListener {
 
 		AlertDialog.Builder builder = new AlertDialog.Builder(mActivity); // dialog
 		builder.setTitle(fileName)
-				.setMessage(mActivity.getResources().getString(R.string.dialog_download))
-				.setPositiveButton(mActivity.getResources().getString(R.string.action_download),
-						dialogClickListener)
-				.setNegativeButton(mActivity.getResources().getString(R.string.action_cancel), dialogClickListener)
+				.setMessage(
+						mActivity.getResources().getString(
+								R.string.dialog_download))
+				.setPositiveButton(
+						mActivity.getResources().getString(
+								R.string.action_download), dialogClickListener)
+				.setNegativeButton(
+						mActivity.getResources().getString(
+								R.string.action_cancel), dialogClickListener)
 				.show();
 		Log.i(Constants.TAG, "Downloading" + fileName);
-		
+
 	}
 
 }
-
