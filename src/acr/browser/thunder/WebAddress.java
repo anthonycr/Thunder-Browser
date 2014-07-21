@@ -46,16 +46,12 @@ public class WebAddress {
 
 	static Pattern sAddressPattern = Pattern
 			.compile(
-					/* scheme */"(?:(http|https|file)\\:\\/\\/)?"
-							+
-							/* authority */"(?:([-A-Za-z0-9$_.+!*'(),;?&=]+(?:\\:[-A-Za-z0-9$_.+!*'(),;?&=]+)?)@)?"
-							+
-							/* host */"([" + GOOD_IRI_CHAR + "%_-]["
-							+ GOOD_IRI_CHAR
-							+ "%_\\.-]*|\\[[0-9a-fA-F:\\.]+\\])?" +
-							/* port */"(?:\\:([0-9]*))?" +
-							/* path */"(\\/?[^#]*)?" +
-							/* anchor */".*", Pattern.CASE_INSENSITIVE);
+					/* scheme */"(?:(http|https|file)\\:\\/\\/)?" +
+					/* authority */"(?:([-A-Za-z0-9$_.+!*'(),;?&=]+(?:\\:[-A-Za-z0-9$_.+!*'(),;?&=]+)?)@)?" +
+					/* host */"([" + GOOD_IRI_CHAR + "%_-][" + GOOD_IRI_CHAR + "%_\\.-]*|\\[[0-9a-fA-F:\\.]+\\])?" +
+					/* port */"(?:\\:([0-9]*))?" +
+					/* path */"(\\/?[^#]*)?" +
+					/* anchor */".*", Pattern.CASE_INSENSITIVE);
 
 	/**
 	 * parses given uriString.
