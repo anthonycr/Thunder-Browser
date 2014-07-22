@@ -13,11 +13,10 @@ gen/
 *.swp
 *~.nib
 local.properties
-project.properties
-proguard/
 .classpath
 .settings/
 .loadpath
+proguard/
 
 # External tool builders
 .externalToolBuilders/
