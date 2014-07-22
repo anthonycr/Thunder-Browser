@@ -16,5 +16,3 @@ done
 android update project -p . --subprojects -t $target --name Lightning
 
 
-cp libs/android-support-v4.jar external/netcipher/libnetcipher/libs/android-support-v4.jar
-
