@@ -35,7 +35,6 @@ import android.net.Uri;
 import android.net.http.SslError;
 import android.os.Message;
 import android.text.InputType;
-import android.text.TextUtils;
 import android.text.method.PasswordTransformationMethod;
 import android.util.Log;
 import android.view.GestureDetector;
@@ -69,7 +68,6 @@ public class LightningView {
 	private Activity mActivity;
 	private WebSettings mSettings;
 	private static int API = android.os.Build.VERSION.SDK_INT;
-	private static String mPackageName;
 	private static String mHomepage;
 	private static String mDefaultUserAgent;
 	private static Bitmap mWebpageBitmap;
@@ -79,12 +77,13 @@ public class LightningView {
 	private boolean isDestroyed = false;
 	private IntentUtils mIntentUtils = null;
 
+	@SuppressWarnings("deprecation")
 	public LightningView(Activity activity, String url) {
 		mActivity = activity;
 		mWebView = new WebView(activity);
 		mAdBlock = new AdBlock(activity);
 		mTitle = new Title(activity);
-		mPackageName = activity.getPackageName();
+		activity.getPackageName();
 		mWebpageBitmap = BitmapFactory.decodeResource(activity.getResources(),
 				R.drawable.ic_webpage);
 
@@ -275,6 +274,8 @@ public class LightningView {
 		return Constants.FILE + homepage;
 	}
 
+	@SuppressLint("SetJavaScriptEnabled")
+	@SuppressWarnings("deprecation")
 	public synchronized void initializePreferences(Context context) {
 		mPreferences = context.getSharedPreferences(
 				PreferenceConstants.PREFERENCES, 0);
@@ -374,6 +375,7 @@ public class LightningView {
 		}
 	}
 
+	@SuppressWarnings("deprecation")
 	@SuppressLint("SetJavaScriptEnabled")
 	public void initializeSettings(WebSettings settings, Context context) {
 		if (API < 18) {
@@ -488,6 +490,7 @@ public class LightningView {
 		}
 	}
 
+	@SuppressWarnings("deprecation")
 	public synchronized void find(String text) {
 		if (mWebView != null) {
 			if (API > 16) {
@@ -1173,6 +1176,7 @@ public class LightningView {
 			return mTitleView;
 		}
 
+		@SuppressWarnings("deprecation")
 		public void activateTab() {
 			if (mTitleView != null) {
 				if (API > 15) {
@@ -1193,6 +1197,7 @@ public class LightningView {
 			}
 		}
 
+		@SuppressWarnings("deprecation")
 		public void deactivateTab() {
 			if (mTitleView != null) {
 				if (API > 15) {

@@ -87,6 +87,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.VideoView;
 
+@SuppressWarnings("deprecation")
 public class BrowserActivity extends Activity implements BrowserController {
 
 	private Activity mActivity;
@@ -125,7 +126,6 @@ public class BrowserActivity extends Activity implements BrowserController {
 	private final int API = android.os.Build.VERSION.SDK_INT;
 	private Bitmap mDefaultVideoPoster;
 	private View mVideoProgressView;
-	private CookieManager mCookieManager;
 	private boolean mFullScreen;
 	private Drawable mDeleteIcon;
 	private Drawable mRefreshIcon;
@@ -142,8 +142,6 @@ public class BrowserActivity extends Activity implements BrowserController {
 	private VideoView mVideoView;
 	private static SearchAdapter mSearchAdapter;
 	private boolean viewIsAnimating = false;
-	private boolean isIncognito = false;
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -1421,7 +1419,7 @@ public class BrowserActivity extends Activity implements BrowserController {
 		initializeSearchSuggestions(mSearch);
 		initializeTabs();
 
-		boolean useProxy = mPreferences.getBoolean(
+		mPreferences.getBoolean(
 				PreferenceConstants.USE_PROXY, false);
 
 		// if (useProxy)

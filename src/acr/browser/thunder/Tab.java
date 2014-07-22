@@ -27,7 +27,7 @@ public class Tab extends LinearLayout {
 		inflater.inflate(R.layout.tab, this, true);
 		mFavicon = (ImageView) getChildAt(0);
 		mTitle = (TextView) getChildAt(1);
-		mClose = (ImageView) getChildAt(2);
+		setClose((ImageView) getChildAt(2));
 		setBackgroundColor(context.getResources().getColor(R.color.gray_medium));
 	}
 
@@ -37,6 +37,14 @@ public class Tab extends LinearLayout {
 
 	public void setFavicon(Bitmap fav) {
 		mFavicon.setImageBitmap(fav);
+	}
+
+	public ImageView getClose() {
+		return mClose;
+	}
+
+	public void setClose(ImageView mClose) {
+		this.mClose = mClose;
 	}
 
 }
