@@ -7,10 +7,9 @@ android:
   licenses:
     - 'android-sdk-license-.+'
     - '.*intel.+'
-before_script:
-  - chmod +x setup-ant.sh
 before_install:
   - git submodule update --init --recursive
+  - chmod +x setup-ant.sh
 install:
   - ./setup-ant.sh
 script:
