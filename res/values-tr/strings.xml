@@ -44,7 +44,6 @@
     <string name="overViewMode">Genel bakış modunda sayfaları yükleme</string>
     <string name="restore">Kaybolan pencereleri başlangıçta yükleme</string>
     <string name="action_history">Geçmiş</string>
-    <string name="action_add">Yer imi ekle</string>
     <string name="action_bookmarks">Yer imleri</string>
     <string name="action_share">Paylaş</string>
     <string name="action_settings">Ayarlar</string>
