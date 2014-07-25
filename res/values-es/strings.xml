@@ -31,7 +31,6 @@
     <string name="settings_title">Ajustes</string>
     <string name="download">Ruta de descargas</string>
     <string name="advanced">Ajustes avanzados</string>
-    <string name="gestures">Habilitar gestos de Atrás y Adelante</string>
     <string name="source">Código fuente</string>
     <string name="license">Licencia</string>
     <string name="github">github.com/anthonycr/Lightning-Browser</string>

@@ -109,7 +109,7 @@ public class BrowserActivity extends Activity implements BrowserController {
 	private PopupMenu mMenu;
 	private MenuInflater mMenuInflater;
 	private List<HistoryItem> mBookmarkList;
-	private boolean mSystemBrowser = false;
+	private boolean mSystemBrowser;
 	private DatabaseHandler mHistoryHandler;
 	private SQLiteDatabase mHistoryDatabase;
 	private SharedPreferences mPreferences;

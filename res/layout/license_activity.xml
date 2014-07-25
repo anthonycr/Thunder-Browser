@@ -14,19 +14,17 @@
         android:paddingTop="10dp" >
 
         <TextView
-            android:id="@+id/textView9"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingLeft="10dp"
-            android:text="Lightning Browser"
+            android:text="@string/name"
             android:textAppearance="?android:attr/textAppearanceMedium" />
 
         <TextView
-            android:id="@+id/isImportAvailable"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingLeft="10dp"
-            android:text="Mozilla Public License v. 2.0"
+            android:text="@string/mpl_license"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:textColor="@color/light" />
     </LinearLayout>
@@ -48,19 +46,17 @@
         android:paddingTop="10dp" >
 
         <TextView
-            android:id="@+id/textView9"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingLeft="10dp"
-            android:text="Android Open Source Project"
+            android:text="@string/android_open_source_project"
             android:textAppearance="?android:attr/textAppearanceMedium" />
 
         <TextView
-            android:id="@+id/isImportAvailable"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingLeft="10dp"
-            android:text="Apache 2.0 License"
+            android:text="@string/apache"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:textColor="@color/light" />
     </LinearLayout>
@@ -81,19 +77,17 @@
         android:paddingTop="10dp" >
 
         <TextView
-            android:id="@+id/textView9"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingLeft="10dp"
-            android:text="hpHosts Ad Server List"
+            android:text="@string/hphosts_ad_server_list"
             android:textAppearance="?android:attr/textAppearanceMedium" />
 
         <TextView
-            android:id="@+id/isImportAvailable"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingLeft="10dp"
-            android:text="Freeware"
+            android:text="@string/freeware"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:textColor="@color/light" />
     </LinearLayout>

@@ -31,7 +31,6 @@
     <string name="settings_title">偏好設定</string>
     <string name="download">下載資料夾位置</string>
     <string name="advanced">進階設定</string>
-    <string name="gestures">啟動上一頁、下一頁手勢</string>
     <string name="source">原始碼</string>
     <string name="license">版權資訊</string>
     <string name="github">github.com/anthonycr/Lightning-Browser</string>
