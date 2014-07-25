@@ -25,25 +25,21 @@ public final class Utils {
     }
 
     public static void downloadFile(final Activity activity, final String url,
-	    final String userAgent, final String contentDisposition,
-	    final boolean privateBrowsing) {
+	    final String userAgent, final String contentDisposition, final boolean privateBrowsing) {
 	String fileName = URLUtil.guessFileName(url, null, null);
-	DownloadHandler.onDownloadStart(activity, url, userAgent,
-		contentDisposition, null, privateBrowsing);
+	DownloadHandler.onDownloadStart(activity, url, userAgent, contentDisposition, null,
+		privateBrowsing);
 	Log.i(Constants.TAG, "Downloading" + fileName);
     }
 
-    public static synchronized void addBookmark(Context context, String title,
-	    String url) {
+    public static synchronized void addBookmark(Context context, String title, String url) {
 	File book = new File(context.getFilesDir(), "bookmarks");
 	File bookUrl = new File(context.getFilesDir(), "bookurl");
-	if ("Bookmarks".equals(title) || "History".equals(title)
-		&& url.startsWith("file://")) {
+	if ("Bookmarks".equals(title) || "History".equals(title) && url.startsWith("file://")) {
 	    return;
 	}
 	try {
-	    BufferedReader readUrlRead = new BufferedReader(new FileReader(
-		    bookUrl));
+	    BufferedReader readUrlRead = new BufferedReader(new FileReader(bookUrl));
 	    String u;
 	    while ((u = readUrlRead.readLine()) != null) {
 		if (u.contentEquals(url)) {
@@ -58,10 +54,8 @@ public final class Utils {
 	} catch (NullPointerException ignored) {
 	}
 	try {
-	    BufferedWriter bookWriter = new BufferedWriter(new FileWriter(book,
-		    true));
-	    BufferedWriter urlWriter = new BufferedWriter(new FileWriter(
-		    bookUrl, true));
+	    BufferedWriter bookWriter = new BufferedWriter(new FileWriter(book, true));
+	    BufferedWriter urlWriter = new BufferedWriter(new FileWriter(bookUrl, true));
 	    bookWriter.write(title);
 	    urlWriter.write(url);
 	    bookWriter.newLine();
@@ -74,8 +68,8 @@ public final class Utils {
 	}
     }
 
-    public static Intent newEmailIntent(Context context, String address,
-	    String subject, String body, String cc) {
+    public static Intent newEmailIntent(Context context, String address, String subject,
+	    String body, String cc) {
 	Intent intent = new Intent(Intent.ACTION_SEND);
 	intent.putExtra(Intent.EXTRA_EMAIL, new String[] { address });
 	intent.putExtra(Intent.EXTRA_TEXT, body);
@@ -85,14 +79,12 @@ public final class Utils {
 	return intent;
     }
 
-    public static void createInformativeDialog(Context context, String title,
-	    String message) {
+    public static void createInformativeDialog(Context context, String title, String message) {
 	AlertDialog.Builder builder = new AlertDialog.Builder(context);
 	builder.setTitle(title);
 	builder.setMessage(message)
 		.setCancelable(true)
-		.setPositiveButton(
-			context.getResources().getString(R.string.action_ok),
+		.setPositiveButton(context.getResources().getString(R.string.action_ok),
 			new DialogInterface.OnClickListener() {
 			    @Override
 			    public void onClick(DialogInterface dialog, int id) {
@@ -136,8 +128,7 @@ public final class Utils {
 	    BufferedReader readUrl = new BufferedReader(new FileReader(bookUrl));
 	    BufferedReader readBook = new BufferedReader(new FileReader(book));
 	    String u, t;
-	    while ((u = readUrl.readLine()) != null
-		    && (t = readBook.readLine()) != null) {
+	    while ((u = readUrl.readLine()) != null && (t = readBook.readLine()) != null) {
 		HistoryItem map = new HistoryItem(u, t, R.drawable.ic_bookmark);
 		bookmarks.add(map);
 	    }

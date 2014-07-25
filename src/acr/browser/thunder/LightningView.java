@@ -90,8 +90,7 @@ public class LightningView {
 	try {
 	    mBrowserController = (BrowserController) activity;
 	} catch (ClassCastException e) {
-	    throw new ClassCastException(activity.toString()
-		    + " must implement BrowserController");
+	    throw new ClassCastException(activity.toString() + " must implement BrowserController");
 	}
 	mIntentUtils = new IntentUtils(mBrowserController);
 	mWebView.setDrawingCacheBackgroundColor(0x00000000);
@@ -99,8 +98,7 @@ public class LightningView {
 	mWebView.setFocusable(true);
 	mWebView.setAnimationCacheEnabled(false);
 	mWebView.setDrawingCacheEnabled(true);
-	mWebView.setBackgroundColor(activity.getResources().getColor(
-		android.R.color.white));
+	mWebView.setBackgroundColor(activity.getResources().getColor(android.R.color.white));
 	if (API > 15) {
 	    mWebView.getRootView().setBackground(null);
 	} else {
@@ -114,14 +112,14 @@ public class LightningView {
 	mWebView.setWebChromeClient(new LightningChromeClient(activity));
 	mWebView.setWebViewClient(new LightningWebClient(activity));
 	mWebView.setDownloadListener(new LightningDownloadListener(activity));
-	mGestureDetector = new GestureDetector(activity,
-		new CustomGestureListener());
+	mGestureDetector = new GestureDetector(activity, new CustomGestureListener());
 	mWebView.setOnTouchListener(new OnTouchListener() {
 
 	    float mLocation = 0;
 	    float mY = 0;
 	    int mAction = 0;
 
+	    @SuppressLint("ClickableViewAccessibility")
 	    @Override
 	    public boolean onTouch(View view, MotionEvent arg1) {
 		if (view != null && !view.hasFocus()) {
@@ -133,8 +131,7 @@ public class LightningView {
 		    mLocation = mY;
 		} else if (mAction == MotionEvent.ACTION_UP) {
 		    if ((mY - mLocation) > 10) {
-			if (mWebView.getScrollY() < 5
-				&& mBrowserController.isActionBarShown()) {
+			if (mWebView.getScrollY() < 5 && mBrowserController.isActionBarShown()) {
 			    mBrowserController.hideActionBar();
 			} else {
 			    mBrowserController.showActionBar();
@@ -181,8 +178,7 @@ public class LightningView {
 		home = home + "file:///android_asset/lightning.png";
 		home = home + HomepageVariables.MIDDLE;
 		home = home
-			+ mPreferences.getString(
-				PreferenceConstants.SEARCH_URL,
+			+ mPreferences.getString(PreferenceConstants.SEARCH_URL,
 				Constants.GOOGLE_SEARCH);
 		break;
 	    case 1:
@@ -278,21 +274,18 @@ public class LightningView {
     @SuppressLint("SetJavaScriptEnabled")
     @SuppressWarnings("deprecation")
     public synchronized void initializePreferences(Context context) {
-	mPreferences = context.getSharedPreferences(
-		PreferenceConstants.PREFERENCES, 0);
-	mHomepage = mPreferences.getString(PreferenceConstants.HOMEPAGE,
-		Constants.HOMEPAGE);
+	mPreferences = context.getSharedPreferences(PreferenceConstants.PREFERENCES, 0);
+	mHomepage = mPreferences.getString(PreferenceConstants.HOMEPAGE, Constants.HOMEPAGE);
 	mAdBlock.updatePreference();
 	if (mSettings == null && mWebView != null) {
 	    mSettings = mWebView.getSettings();
 	} else if (mSettings == null) {
 	    return;
 	}
-	mSettings.setGeolocationEnabled(mPreferences.getBoolean(
-		PreferenceConstants.LOCATION, false));
+	mSettings.setGeolocationEnabled(mPreferences
+		.getBoolean(PreferenceConstants.LOCATION, false));
 	if (API < 19) {
-	    switch (mPreferences.getInt(
-		    PreferenceConstants.ADOBE_FLASH_SUPPORT, 0)) {
+	    switch (mPreferences.getInt(PreferenceConstants.ADOBE_FLASH_SUPPORT, 0)) {
 		case 0:
 		    mSettings.setPluginState(PluginState.OFF);
 		    break;
@@ -312,8 +305,7 @@ public class LightningView {
 	switch (mPreferences.getInt(PreferenceConstants.USER_AGENT, 1)) {
 	    case 1:
 		if (API > 16)
-		    mSettings.setUserAgentString(WebSettings
-			    .getDefaultUserAgent(context));
+		    mSettings.setUserAgentString(WebSettings.getDefaultUserAgent(context));
 		else
 		    mSettings.setUserAgentString(mDefaultUserAgent);
 		break;
@@ -325,8 +317,7 @@ public class LightningView {
 		break;
 	    case 4:
 		mSettings.setUserAgentString(mPreferences.getString(
-			PreferenceConstants.USER_AGENT_STRING,
-			mDefaultUserAgent));
+			PreferenceConstants.USER_AGENT_STRING, mDefaultUserAgent));
 		break;
 	}
 
@@ -348,14 +339,13 @@ public class LightningView {
 	    mSettings.setLayoutAlgorithm(LayoutAlgorithm.NORMAL);
 	}
 
-	mSettings.setBlockNetworkImage(mPreferences.getBoolean(
-		PreferenceConstants.BLOCK_IMAGES, false));
-	mSettings.setSupportMultipleWindows(mPreferences.getBoolean(
-		PreferenceConstants.POPUPS, true));
-	mSettings.setUseWideViewPort(mPreferences.getBoolean(
-		PreferenceConstants.USE_WIDE_VIEWPORT, true));
-	mWideViewPort = mPreferences.getBoolean(
-		PreferenceConstants.USE_WIDE_VIEWPORT, true);
+	mSettings.setBlockNetworkImage(mPreferences.getBoolean(PreferenceConstants.BLOCK_IMAGES,
+		false));
+	mSettings.setSupportMultipleWindows(mPreferences.getBoolean(PreferenceConstants.POPUPS,
+		true));
+	mSettings.setUseWideViewPort(mPreferences.getBoolean(PreferenceConstants.USE_WIDE_VIEWPORT,
+		true));
+	mWideViewPort = mPreferences.getBoolean(PreferenceConstants.USE_WIDE_VIEWPORT, true);
 	mSettings.setLoadWithOverviewMode(mPreferences.getBoolean(
 		PreferenceConstants.OVERVIEW_MODE, true));
 	switch (mPreferences.getInt(PreferenceConstants.TEXT_SIZE, 3)) {
@@ -390,15 +380,13 @@ public class LightningView {
 	    settings.setMediaPlaybackRequiresUserGesture(true);
 	}
 	if (API < 19) {
-	    settings.setDatabasePath(context.getFilesDir().getAbsolutePath()
-		    + "/databases");
+	    settings.setDatabasePath(context.getFilesDir().getAbsolutePath() + "/databases");
 	}
 	settings.setDomStorageEnabled(true);
 	settings.setAppCachePath(context.getCacheDir().toString());
 	settings.setAppCacheEnabled(true);
 	settings.setCacheMode(WebSettings.LOAD_DEFAULT);
-	settings.setGeolocationDatabasePath(context.getCacheDir()
-		.getAbsolutePath());
+	settings.setGeolocationDatabasePath(context.getCacheDir().getAbsolutePath());
 	settings.setAllowFileAccess(true);
 	settings.setDatabaseEnabled(true);
 	settings.setSupportZoom(true);
@@ -640,15 +628,12 @@ public class LightningView {
 	}
 
 	@Override
-	public WebResourceResponse shouldInterceptRequest(WebView view,
-		String url) {
+	public WebResourceResponse shouldInterceptRequest(WebView view, String url) {
 	    if (mAdBlock.isAd(url)) {
-		ByteArrayInputStream EMPTY = new ByteArrayInputStream(
-			"".getBytes());
+		ByteArrayInputStream EMPTY = new ByteArrayInputStream("".getBytes());
 		return new WebResourceResponse("text/plain", "utf-8", EMPTY);
 	    }
-	    boolean useProxy = mPreferences.getBoolean(
-		    PreferenceConstants.USE_PROXY, false);
+	    boolean useProxy = mPreferences.getBoolean(PreferenceConstants.USE_PROXY, false);
 	    boolean mDoLeakHardening = false;
 
 	    if (!useProxy)
@@ -664,19 +649,15 @@ public class LightningView {
 
 		Proxy proxy = null;
 
-		String host = mPreferences.getString(
-			PreferenceConstants.USE_PROXY_HOST, "localhost");
-		int port = mPreferences.getInt(
-			PreferenceConstants.USE_PROXY_PORT, 8118);
-		proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress(host,
-			port));
+		String host = mPreferences.getString(PreferenceConstants.USE_PROXY_HOST,
+			"localhost");
+		int port = mPreferences.getInt(PreferenceConstants.USE_PROXY_PORT, 8118);
+		proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress(host, port));
 
 		HttpURLConnection.setFollowRedirects(true);
-		HttpURLConnection conn = (HttpURLConnection) uURl
-			.openConnection(proxy);
+		HttpURLConnection conn = (HttpURLConnection) uURl.openConnection(proxy);
 		conn.setInstanceFollowRedirects(true);
-		conn.setRequestProperty("User-Agent",
-			mSettings.getUserAgentString());
+		conn.setRequestProperty("User-Agent", mSettings.getUserAgentString());
 
 		// conn.setRequestProperty("Transfer-Encoding", "chunked");
 		// conn.setUseCaches(false);
@@ -705,8 +686,7 @@ public class LightningView {
 		if (cType != null && cType.startsWith("text")) {
 		    InputStream fStream = null;
 
-		    BufferedInputStream bis = new BufferedInputStream(
-			    conn.getInputStream());
+		    BufferedInputStream bis = new BufferedInputStream(conn.getInputStream());
 		    ByteArrayBuffer baf = new ByteArrayBuffer(connLen);
 		    int read = 0;
 		    int bufSize = 2048;
@@ -722,17 +702,16 @@ public class LightningView {
 
 		    fStream = new ByteArrayInputStream(plainText);
 
-		    fStream = new ReplacingInputStream(
-			    new ByteArrayInputStream(plainText),
+		    fStream = new ReplacingInputStream(new ByteArrayInputStream(plainText),
 			    "poster=".getBytes(), "foo=".getBytes());
-		    fStream = new ReplacingInputStream(fStream,
-			    "Poster=".getBytes(), "foo=".getBytes());
-		    fStream = new ReplacingInputStream(fStream,
-			    "Poster=".getBytes(), "foo=".getBytes());
-		    fStream = new ReplacingInputStream(fStream,
-			    ".poster".getBytes(), ".foo".getBytes());
-		    fStream = new ReplacingInputStream(fStream,
-			    "\"poster\"".getBytes(), "\"foo\"".getBytes());
+		    fStream = new ReplacingInputStream(fStream, "Poster=".getBytes(),
+			    "foo=".getBytes());
+		    fStream = new ReplacingInputStream(fStream, "Poster=".getBytes(),
+			    "foo=".getBytes());
+		    fStream = new ReplacingInputStream(fStream, ".poster".getBytes(),
+			    ".foo".getBytes());
+		    fStream = new ReplacingInputStream(fStream, "\"poster\"".getBytes(),
+			    "\"foo\"".getBytes());
 
 		    return new WebResourceResponse(cType, cEnc, fStream);
 		}/**
@@ -749,16 +728,14 @@ public class LightningView {
 		}
 	    } catch (Exception e) {
 		Log.e(Constants.TAG, "Error filtering stream", e);
-		ByteArrayInputStream EMPTY = new ByteArrayInputStream(
-			"".getBytes());
+		ByteArrayInputStream EMPTY = new ByteArrayInputStream("".getBytes());
 		return new WebResourceResponse("text/plain", "utf-8", EMPTY);
 	    }
 	}
 
 	@Override
-	public void onReceivedHttpAuthRequest(final WebView view,
-		final HttpAuthHandler handler, final String host,
-		final String realm) {
+	public void onReceivedHttpAuthRequest(final WebView view, final HttpAuthHandler handler,
+		final String host, final String realm) {
 
 	    AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);
 	    final EditText name = new EditText(mActivity);
@@ -776,12 +753,10 @@ public class LightningView {
 	    builder.setTitle(mActivity.getString(R.string.title_sign_in));
 	    builder.setView(passLayout);
 	    builder.setCancelable(true)
-		    .setPositiveButton(
-			    mActivity.getString(R.string.title_sign_in),
+		    .setPositiveButton(mActivity.getString(R.string.title_sign_in),
 			    new DialogInterface.OnClickListener() {
 				@Override
-				public void onClick(DialogInterface dialog,
-					int id) {
+				public void onClick(DialogInterface dialog, int id) {
 				    String user = name.getText().toString();
 				    String pass = password.getText().toString();
 				    handler.proceed(user.trim(), pass.trim());
@@ -789,12 +764,10 @@ public class LightningView {
 
 				}
 			    })
-		    .setNegativeButton(
-			    mActivity.getString(R.string.action_cancel),
+		    .setNegativeButton(mActivity.getString(R.string.action_cancel),
 			    new DialogInterface.OnClickListener() {
 				@Override
-				public void onClick(DialogInterface dialog,
-					int id) {
+				public void onClick(DialogInterface dialog, int id) {
 				    handler.cancel();
 
 				}
@@ -812,27 +785,22 @@ public class LightningView {
 	}
 
 	@Override
-	public void onReceivedSslError(WebView view,
-		final SslErrorHandler handler, SslError error) {
+	public void onReceivedSslError(WebView view, final SslErrorHandler handler, SslError error) {
 	    AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);
 	    builder.setTitle(mActivity.getString(R.string.title_warning));
-	    builder.setMessage(
-		    mActivity.getString(R.string.message_untrusted_certificate))
+	    builder.setMessage(mActivity.getString(R.string.message_untrusted_certificate))
 		    .setCancelable(true)
-		    .setPositiveButton(
-			    mActivity.getString(R.string.action_yes),
+		    .setPositiveButton(mActivity.getString(R.string.action_yes),
 			    new DialogInterface.OnClickListener() {
 				@Override
-				public void onClick(DialogInterface dialog,
-					int id) {
+				public void onClick(DialogInterface dialog, int id) {
 				    handler.proceed();
 				}
 			    })
 		    .setNegativeButton(mActivity.getString(R.string.action_no),
 			    new DialogInterface.OnClickListener() {
 				@Override
-				public void onClick(DialogInterface dialog,
-					int id) {
+				public void onClick(DialogInterface dialog, int id) {
 				    handler.cancel();
 				}
 			    });
@@ -846,20 +814,15 @@ public class LightningView {
 	}
 
 	@Override
-	public void onFormResubmission(WebView view, final Message dontResend,
-		final Message resend) {
+	public void onFormResubmission(WebView view, final Message dontResend, final Message resend) {
 	    AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);
-	    builder.setTitle(mActivity
-		    .getString(R.string.title_form_resubmission));
-	    builder.setMessage(
-		    mActivity.getString(R.string.message_form_resubmission))
+	    builder.setTitle(mActivity.getString(R.string.title_form_resubmission));
+	    builder.setMessage(mActivity.getString(R.string.message_form_resubmission))
 		    .setCancelable(true)
-		    .setPositiveButton(
-			    mActivity.getString(R.string.action_yes),
+		    .setPositiveButton(mActivity.getString(R.string.action_yes),
 			    new DialogInterface.OnClickListener() {
 				@Override
-				public void onClick(DialogInterface dialog,
-					int id) {
+				public void onClick(DialogInterface dialog, int id) {
 
 				    resend.sendToTarget();
 				}
@@ -867,8 +830,7 @@ public class LightningView {
 		    .setNegativeButton(mActivity.getString(R.string.action_no),
 			    new DialogInterface.OnClickListener() {
 				@Override
-				public void onClick(DialogInterface dialog,
-					int id) {
+				public void onClick(DialogInterface dialog, int id) {
 
 				    dontResend.sendToTarget();
 				}
@@ -884,8 +846,8 @@ public class LightningView {
 	    }
 	    if (url.contains("mailto:")) {
 		MailTo mailTo = MailTo.parse(url);
-		Intent i = Utils.newEmailIntent(mActivity, mailTo.getTo(),
-			mailTo.getSubject(), mailTo.getBody(), mailTo.getCc());
+		Intent i = Utils.newEmailIntent(mActivity, mailTo.getTo(), mailTo.getSubject(),
+			mailTo.getBody(), mailTo.getCc());
 		mActivity.startActivity(i);
 		view.reload();
 		return true;
@@ -957,24 +919,19 @@ public class LightningView {
 	    } else {
 		org = origin;
 	    }
-	    builder.setMessage(
-		    org + mActivity.getString(R.string.message_location))
+	    builder.setMessage(org + mActivity.getString(R.string.message_location))
 		    .setCancelable(true)
-		    .setPositiveButton(
-			    mActivity.getString(R.string.action_allow),
+		    .setPositiveButton(mActivity.getString(R.string.action_allow),
 			    new DialogInterface.OnClickListener() {
 				@Override
-				public void onClick(DialogInterface dialog,
-					int id) {
+				public void onClick(DialogInterface dialog, int id) {
 				    callback.invoke(origin, true, remember);
 				}
 			    })
-		    .setNegativeButton(
-			    mActivity.getString(R.string.action_dont_allow),
+		    .setNegativeButton(mActivity.getString(R.string.action_dont_allow),
 			    new DialogInterface.OnClickListener() {
 				@Override
-				public void onClick(DialogInterface dialog,
-					int id) {
+				public void onClick(DialogInterface dialog, int id) {
 				    callback.invoke(origin, false, remember);
 				}
 			    });
@@ -984,8 +941,8 @@ public class LightningView {
 	}
 
 	@Override
-	public boolean onCreateWindow(WebView view, boolean isDialog,
-		boolean isUserGesture, Message resultMsg) {
+	public boolean onCreateWindow(WebView view, boolean isDialog, boolean isUserGesture,
+		Message resultMsg) {
 	    mBrowserController.onCreateWindow(isUserGesture, resultMsg);
 	    return isUserGesture;
 	}
@@ -1000,13 +957,11 @@ public class LightningView {
 	    mBrowserController.openFileChooser(uploadMsg);
 	}
 
-	public void openFileChooser(ValueCallback<Uri> uploadMsg,
-		String acceptType) {
+	public void openFileChooser(ValueCallback<Uri> uploadMsg, String acceptType) {
 	    mBrowserController.openFileChooser(uploadMsg);
 	}
 
-	public void openFileChooser(ValueCallback<Uri> uploadMsg,
-		String acceptType, String capture) {
+	public void openFileChooser(ValueCallback<Uri> uploadMsg, String acceptType, String capture) {
 	    mBrowserController.openFileChooser(uploadMsg);
 	}
 
@@ -1029,8 +984,7 @@ public class LightningView {
 	@Override
 	public void onShowCustomView(View view, CustomViewCallback callback) {
 	    Activity activity = mBrowserController.getActivity();
-	    mBrowserController.onShowCustomView(view,
-		    activity.getRequestedOrientation(), callback);
+	    mBrowserController.onShowCustomView(view, activity.getRequestedOrientation(), callback);
 	    super.onShowCustomView(view, callback);
 	}
 
@@ -1038,8 +992,7 @@ public class LightningView {
 	@Deprecated
 	public void onShowCustomView(View view, int requestedOrientation,
 		CustomViewCallback callback) {
-	    mBrowserController.onShowCustomView(view, requestedOrientation,
-		    callback);
+	    mBrowserController.onShowCustomView(view, requestedOrientation, callback);
 	    super.onShowCustomView(view, requestedOrientation, callback);
 	}
 
@@ -1055,6 +1008,7 @@ public class LightningView {
 	private Context mContext;
 	private int mId = 0;
 
+	@SuppressLint("InflateParams")
 	public Title(Context context) {
 	    mDefaultIcon = BitmapFactory.decodeResource(context.getResources(),
 		    R.drawable.ic_webpage);
@@ -1063,18 +1017,15 @@ public class LightningView {
 	    mContext = context;
 	    LayoutInflater inflater = LayoutInflater.from(context);
 
-	    mFaviconSize = context.getResources()
-		    .getDrawable(R.drawable.ic_webpage).getMinimumWidth() / 2;
-	    mCloseIcon = context.getResources().getDrawable(
-		    R.drawable.ic_action_delete);
-	    mCloseIcon.setBounds(0, 0, mFaviconSize * 4 / 3,
-		    mFaviconSize * 4 / 3);
+	    mFaviconSize = context.getResources().getDrawable(R.drawable.ic_webpage)
+		    .getMinimumWidth() / 2;
+	    mCloseIcon = context.getResources().getDrawable(R.drawable.ic_action_delete);
+	    mCloseIcon.setBounds(0, 0, mFaviconSize * 4 / 3, mFaviconSize * 4 / 3);
 	    mTitleView = (TextView) inflater.inflate(R.layout.title, null);
-	    mTitleView.setPadding(Utils.convertToDensityPixels(mContext, 20),
-		    0, Utils.convertToDensityPixels(mContext, 15), 0);
+	    mTitleView.setPadding(Utils.convertToDensityPixels(mContext, 20), 0,
+		    Utils.convertToDensityPixels(mContext, 15), 0);
 
-	    mTitleView.setText(mContext.getResources().getString(
-		    R.string.action_new_tab));
+	    mTitleView.setText(mContext.getResources().getString(R.string.action_new_tab));
 
 	    mTitleView.setText(mTitle);
 	    Drawable icon = new BitmapDrawable(null, mFavicon);
@@ -1086,8 +1037,7 @@ public class LightningView {
 		public boolean onTouch(View view, MotionEvent event) {
 		    if (mTitleView.getCompoundDrawables()[2] != null) {
 			boolean tappedX = event.getX() > (mTitleView.getWidth()
-				- mTitleView.getPaddingRight() - mCloseIcon
-				.getIntrinsicWidth());
+				- mTitleView.getPaddingRight() - mCloseIcon.getIntrinsicWidth());
 			if (tappedX) {
 			    if (event.getAction() == MotionEvent.ACTION_UP) {
 				mBrowserController.deleteTab(mId);
@@ -1162,17 +1112,15 @@ public class LightningView {
 	public void activateTab() {
 	    if (mTitleView != null) {
 		if (API > 15) {
-		    mTitleView.setBackground(mContext.getResources()
-			    .getDrawable(R.drawable.tab_background_active));
-		    mTitleView.setPadding(
-			    Utils.convertToDensityPixels(mContext, 20), 0,
+		    mTitleView.setBackground(mContext.getResources().getDrawable(
+			    R.drawable.tab_background_active));
+		    mTitleView.setPadding(Utils.convertToDensityPixels(mContext, 20), 0,
 			    Utils.convertToDensityPixels(mContext, 15), 0);
 
 		} else {
-		    mTitleView.setBackgroundDrawable(mContext.getResources()
-			    .getDrawable(R.drawable.tab_background_active));
-		    mTitleView.setPadding(
-			    Utils.convertToDensityPixels(mContext, 20), 0,
+		    mTitleView.setBackgroundDrawable(mContext.getResources().getDrawable(
+			    R.drawable.tab_background_active));
+		    mTitleView.setPadding(Utils.convertToDensityPixels(mContext, 20), 0,
 			    Utils.convertToDensityPixels(mContext, 15), 0);
 
 		}
@@ -1183,17 +1131,15 @@ public class LightningView {
 	public void deactivateTab() {
 	    if (mTitleView != null) {
 		if (API > 15) {
-		    mTitleView.setBackground(mContext.getResources()
-			    .getDrawable(R.drawable.tab_background_inactive));
-		    mTitleView.setPadding(
-			    Utils.convertToDensityPixels(mContext, 20), 0,
+		    mTitleView.setBackground(mContext.getResources().getDrawable(
+			    R.drawable.tab_background_inactive));
+		    mTitleView.setPadding(Utils.convertToDensityPixels(mContext, 20), 0,
 			    Utils.convertToDensityPixels(mContext, 15), 0);
 
 		} else {
-		    mTitleView.setBackgroundDrawable(mContext.getResources()
-			    .getDrawable(R.drawable.tab_background_inactive));
-		    mTitleView.setPadding(
-			    Utils.convertToDensityPixels(mContext, 20), 0,
+		    mTitleView.setBackgroundDrawable(mContext.getResources().getDrawable(
+			    R.drawable.tab_background_inactive));
+		    mTitleView.setPadding(Utils.convertToDensityPixels(mContext, 20), 0,
 			    Utils.convertToDensityPixels(mContext, 15), 0);
 
 		}

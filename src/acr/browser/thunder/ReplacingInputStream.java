@@ -15,8 +15,7 @@ public class ReplacingInputStream extends FilterInputStream {
 
     final byte[] search, replacement;
 
-    protected ReplacingInputStream(InputStream in, byte[] search,
-	    byte[] replacement) {
+    protected ReplacingInputStream(InputStream in, byte[] search, byte[] replacement) {
 	super(in);
 	this.search = search;
 	this.replacement = replacement;
