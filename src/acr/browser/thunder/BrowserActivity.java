@@ -60,6 +60,7 @@ import android.view.WindowManager;
 import android.view.View.OnClickListener;
 import android.view.View.OnKeyListener;
 import android.view.View.OnTouchListener;
+import android.view.animation.AccelerateInterpolator;
 import android.view.animation.Animation;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.Animation.AnimationListener;
@@ -135,7 +136,6 @@ public class BrowserActivity extends Activity implements BrowserController {
     private boolean mIsNewIntent = false;
     private String mHomepage;
     private Animation mAddTab;
-    private Animation mRemoveTab;
     private RelativeLayout mParentBackground;
     private RelativeLayout mUrlBar;
     private Animation mSlideUpAnimation;
@@ -143,7 +143,7 @@ public class BrowserActivity extends Activity implements BrowserController {
     private HorizontalScrollView mTabScrollView;
     private VideoView mVideoView;
     private static SearchAdapter mSearchAdapter;
-    private boolean viewIsAnimating = false;
+    private boolean mViewIsAnimating = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -1271,7 +1271,6 @@ public class BrowserActivity extends Activity implements BrowserController {
 	});
 
 	mAddTab = AnimationUtils.loadAnimation(mContext, R.anim.up);
-	mRemoveTab = AnimationUtils.loadAnimation(mContext, R.anim.down);
 	mSlideDownAnimation = AnimationUtils.loadAnimation(mContext, R.anim.slide_down);
 	mSlideUpAnimation = AnimationUtils.loadAnimation(mContext, R.anim.slide_up);
 
@@ -1393,7 +1392,6 @@ public class BrowserActivity extends Activity implements BrowserController {
 	OrbotHelper oh = new OrbotHelper(this);
 	if (!oh.isOrbotRunning())
 	    oh.requestOrbotStart(this);
-
 	try {
 	    String host = mPreferences.getString(PreferenceConstants.USE_PROXY_HOST, "localhost");
 	    int port = mPreferences.getInt(PreferenceConstants.USE_PROXY_PORT, 8118);
@@ -1621,7 +1619,7 @@ public class BrowserActivity extends Activity implements BrowserController {
 
     @Override
     public synchronized void deleteTab(int id) {
-	if (viewIsAnimating) {
+	if (mViewIsAnimating) {
 	    return;
 	}
 	mTabLayout.clearDisappearingChildren();
@@ -1709,9 +1707,46 @@ public class BrowserActivity extends Activity implements BrowserController {
 	return false;
     }
 
+    private void collapse(final View v, AnimationListener al) {
+	final int initialWidth = v.getMeasuredWidth();
+	final int initialHeight = v.getMeasuredHeight();
+
+	Animation anim = new Animation() {
+	    @Override
+	    protected void applyTransformation(float interpolatedTime,
+		    android.view.animation.Transformation t) {
+		if (interpolatedTime == 1) {
+		} else if (interpolatedTime < 0.5f) {
+		    // animate tab down first
+		    v.setTranslationY(initialHeight * interpolatedTime * 2.0f);
+		    v.setAlpha((0.5f - interpolatedTime) * 2.0f);
+		} else {
+		    // animate tab width to zero next
+		    // v.getLayoutParams().width = initialWidth -
+		    // (int)(initialWidth * interpolatedTime);
+		    v.getLayoutParams().width = initialWidth
+			    - (int) (initialWidth * 2 * (interpolatedTime - 0.5));
+		    v.requestLayout();
+		}
+	    }
+
+	    @Override
+	    public boolean willChangeBounds() {
+		return true;
+	    }
+	};
+
+	if (al != null) {
+	    anim.setAnimationListener(al);
+	}
+	anim.setDuration(350);
+	anim.setInterpolator(new AccelerateInterpolator());
+	v.startAnimation(anim);
+    }
+
     private synchronized void animateTabRemoval(final TextView view, final int position,
 	    final LightningView reference, final boolean isShown) {
-	mRemoveTab.setAnimationListener(new AnimationListener() {
+	AnimationListener listener = new AnimationListener() {
 
 	    @Override
 	    public void onAnimationEnd(Animation animation) {
@@ -1724,7 +1759,7 @@ public class BrowserActivity extends Activity implements BrowserController {
 			mActivity.runOnUiThread(new Runnable() {
 			    public void run() {
 				mTabLayout.removeView(view);
-				viewIsAnimating = false;
+				mViewIsAnimating = false;
 			    }
 			});
 		    }
@@ -1743,18 +1778,11 @@ public class BrowserActivity extends Activity implements BrowserController {
 
 	    @Override
 	    public void onAnimationStart(Animation animation) {
-		viewIsAnimating = true;
+		mViewIsAnimating = true;
 	    }
 
-	});
-	new Runnable() {
-
-	    @Override
-	    public void run() {
-		view.startAnimation(mRemoveTab);
-	    }
-
-	}.run();
+	};
+	collapse(view, listener);
     }
 
     private synchronized void animateTabAddition(final LightningView view, final boolean show) {

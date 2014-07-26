@@ -553,17 +553,17 @@ public class LightningView {
     }
 
     public void deactivateTab() {
+	onPause();
 	if (mTitle != null) {
 	    mTitle.deactivateTab();
 	}
-	onPause();
     }
 
     public void activateTab() {
+	onResume();
 	if (mTitle != null) {
 	    mTitle.activateTab();
 	}
-	onResume();
     }
 
     public synchronized void loadUrl(String url) {

@@ -4,7 +4,7 @@
     android:layout_height="30dp"
     android:layout_gravity="center_vertical"
     android:background="@drawable/tab_background_active"
-    android:drawablePadding="1dp"
+    android:drawablePadding="2dp"
     android:ellipsize="end"
     android:gravity="center_vertical"
     android:maxHeight="30dp"
