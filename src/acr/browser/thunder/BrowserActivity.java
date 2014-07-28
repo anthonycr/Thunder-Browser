@@ -25,6 +25,7 @@ import java.util.Locale;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.Message;
 import android.provider.Browser;
 import android.animation.ObjectAnimator;
@@ -60,7 +61,6 @@ import android.view.WindowManager;
 import android.view.View.OnClickListener;
 import android.view.View.OnKeyListener;
 import android.view.View.OnTouchListener;
-import android.view.animation.AccelerateInterpolator;
 import android.view.animation.Animation;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.Animation.AnimationListener;
@@ -175,13 +175,25 @@ public class BrowserActivity extends Activity implements BrowserController {
 
     @Override
     public void updateProgress(int n) {
-	ObjectAnimator animator = ObjectAnimator.ofInt(mProgressBar, "progress", n);
-	animator.setDuration(200);
-	animator.setInterpolator(new DecelerateInterpolator());
-	animator.start();
+
+	if (n > mProgressBar.getProgress()) {
+	    ObjectAnimator animator = ObjectAnimator.ofInt(mProgressBar, "progress", n);
+	    animator.setDuration(200);
+	    animator.setInterpolator(new DecelerateInterpolator());
+	    animator.start();
+	} else {
+	    mProgressBar.setProgress(n);
+	}
 	if (n >= 100) {
-	    mProgressBar.setVisibility(View.INVISIBLE);
-	    setIsFinishedLoading();
+	    Handler handler = new Handler();
+	    handler.postDelayed(new Runnable() {
+		@Override
+		public void run() {
+		    mProgressBar.setVisibility(View.INVISIBLE);
+		    setIsFinishedLoading();
+		}
+	    }, 200);
+
 	} else {
 	    mProgressBar.setVisibility(View.VISIBLE);
 	    setIsLoading();
@@ -1716,14 +1728,14 @@ public class BrowserActivity extends Activity implements BrowserController {
 	    protected void applyTransformation(float interpolatedTime,
 		    android.view.animation.Transformation t) {
 		if (interpolatedTime == 1) {
-		} else if (interpolatedTime < 0.5f) {
+		} else if (interpolatedTime <= 0.5f) {
 		    // animate tab down first
 		    v.setTranslationY(initialHeight * interpolatedTime * 2.0f);
-		    v.setAlpha((0.5f - interpolatedTime) * 2.0f);
 		} else {
 		    // animate tab width to zero next
 		    // v.getLayoutParams().width = initialWidth -
 		    // (int)(initialWidth * interpolatedTime);
+		    v.setAlpha(0f);
 		    v.getLayoutParams().width = initialWidth
 			    - (int) (initialWidth * 2 * (interpolatedTime - 0.5));
 		    v.requestLayout();
@@ -1740,7 +1752,7 @@ public class BrowserActivity extends Activity implements BrowserController {
 	    anim.setAnimationListener(al);
 	}
 	anim.setDuration(350);
-	anim.setInterpolator(new AccelerateInterpolator());
+	anim.setInterpolator(new DecelerateInterpolator());
 	v.startAnimation(anim);
     }
 
@@ -1801,8 +1813,16 @@ public class BrowserActivity extends Activity implements BrowserController {
 
 	    @Override
 	    public void onAnimationEnd(Animation animation) {
+		Handler handler = new Handler();
+		handler.postDelayed(new Runnable() {
 
-		mTabScrollView.smoothScrollTo(mCurrentView.getTitleView().getLeft(), 0);
+		    @Override
+		    public void run() {
+			mTabScrollView.smoothScrollTo(mCurrentView.getTitleView().getLeft(), 0);
+		    }
+
+		}, 100);
+
 		if (show) {
 		    view.setVisible();
 		}
