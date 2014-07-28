@@ -271,7 +271,7 @@ public class LightningView {
 	return Constants.FILE + homepage;
     }
 
-    @SuppressLint("SetJavaScriptEnabled")
+    @SuppressLint({ "SetJavaScriptEnabled", "InlinedApi" })
     @SuppressWarnings("deprecation")
     public synchronized void initializePreferences(Context context) {
 	mPreferences = context.getSharedPreferences(PreferenceConstants.PREFERENCES, 0);
@@ -335,6 +335,8 @@ public class LightningView {
 
 	if (mPreferences.getBoolean(PreferenceConstants.TEXT_REFLOW, false)) {
 	    mSettings.setLayoutAlgorithm(LayoutAlgorithm.NARROW_COLUMNS);
+	} else if (API >= android.os.Build.VERSION_CODES.KITKAT) {
+	    mSettings.setLayoutAlgorithm(LayoutAlgorithm.TEXT_AUTOSIZING);
 	} else {
 	    mSettings.setLayoutAlgorithm(LayoutAlgorithm.NORMAL);
 	}
