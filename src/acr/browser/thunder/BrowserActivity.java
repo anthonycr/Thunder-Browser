@@ -182,7 +182,10 @@ public class BrowserActivity extends Activity implements BrowserController {
 			animator.setInterpolator(new DecelerateInterpolator());
 			animator.start();
 		} else {
-			mProgressBar.setProgress(n);
+			ObjectAnimator animator = ObjectAnimator.ofInt(mProgressBar, "progress", 0, n);
+			animator.setDuration(200);
+			animator.setInterpolator(new DecelerateInterpolator());
+			animator.start();
 		}
 		if (n >= 100) {
 			Handler handler = new Handler();
