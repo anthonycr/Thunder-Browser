@@ -151,8 +151,12 @@ public class LightningView {
 		initializeSettings(mWebView.getSettings(), activity);
 		initializePreferences(activity);
 
-		if (url != null && !url.trim().isEmpty()) {
-			mWebView.loadUrl(url);
+		if (url != null) {
+			if (!url.trim().isEmpty()) {
+				mWebView.loadUrl(url);
+			} else {
+				//don't load anything, the user is looking for a blank tab
+			}
 		} else {
 			if (mHomepage.startsWith("about:home")) {
 				mSettings.setUseWideViewPort(false);
