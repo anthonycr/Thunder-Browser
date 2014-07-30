@@ -1,4 +1,4 @@
-#Thunder Browser
+#Thunder Browser [![Build Status](https://travis-ci.org/anthonycr/Thunder-Browser.svg?branch=master)](https://travis-ci.org/anthonycr/Thunder-Browser)
 ####Speed, Simplicity, Security
 ####A Traditional Browsing Experience
 #![](ic_launcher_small.png)
@@ -22,8 +22,6 @@
 * Flash support (prior to 4.4)
 
 * Follows Google design guidelines
-
-* Unique utilization of navigation drawer for tabs
 
 * Google search suggestions
 
