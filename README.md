@@ -5,7 +5,7 @@
 ####Download
 * [Download APK from here](https://github.com/anthonycr/Thunder-Browser/releases)
 
-* Download from Google Play (Not available right now)
+* Download from Google Play (Not available just yet)
 
 
 ####Features
