@@ -1,4 +1,4 @@
-#Thunder Browser [![Build Status](https://travis-ci.org/anthonycr/Thunder-Browser.svg?branch=master)](https://travis-ci.org/anthonycr/Thunder-Browser)
+#Thunder Browser
 ####Speed, Simplicity, Security
 ####A Traditional Browsing Experience
 #![](ic_launcher_small.png)
