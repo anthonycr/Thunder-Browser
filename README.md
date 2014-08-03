@@ -1,11 +1,11 @@
-#Thunder Browser
+#Thunder Browser [![Build Status](https://travis-ci.org/anthonycr/Thunder-Browser.svg?branch=master)](https://travis-ci.org/anthonycr/Thunder-Browser)
 ####Speed, Simplicity, Security
 ####A Traditional Browsing Experience
 #![](ic_launcher_small.png)
 ####Download
 * [Download APK from here](https://github.com/anthonycr/Thunder-Browser/releases)
 
-* Download from Google Play (Not available right now)
+* Download from Google Play (Not available just yet)
 
 
 ####Features
@@ -22,8 +22,6 @@
 * Flash support (prior to 4.4)
 
 * Follows Google design guidelines
-
-* Unique utilization of navigation drawer for tabs
 
 * Google search suggestions
 
