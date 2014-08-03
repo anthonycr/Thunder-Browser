@@ -181,7 +181,7 @@ public class BrowserActivity extends Activity implements BrowserController {
 			animator.setDuration(200);
 			animator.setInterpolator(new DecelerateInterpolator());
 			animator.start();
-		} else {
+		} else if (n < mProgressBar.getProgress()) {
 			ObjectAnimator animator = ObjectAnimator.ofInt(mProgressBar, "progress", 0, n);
 			animator.setDuration(200);
 			animator.setInterpolator(new DecelerateInterpolator());
@@ -1726,8 +1726,7 @@ public class BrowserActivity extends Activity implements BrowserController {
 			@Override
 			protected void applyTransformation(float interpolatedTime,
 					android.view.animation.Transformation t) {
-				if (interpolatedTime == 1) {
-				} else if (interpolatedTime <= 0.5f) {
+				if (interpolatedTime <= 0.5f) {
 					// animate tab down first
 					v.setTranslationY(initialHeight * interpolatedTime * 2.0f);
 				} else {
