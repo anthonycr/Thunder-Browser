@@ -155,7 +155,7 @@ public class LightningView {
 			if (!url.trim().isEmpty()) {
 				mWebView.loadUrl(url);
 			} else {
-				//don't load anything, the user is looking for a blank tab
+				// don't load anything, the user is looking for a blank tab
 			}
 		} else {
 			if (mHomepage.startsWith("about:home")) {
@@ -177,87 +177,87 @@ public class LightningView {
 		String home = "";
 		home = HomepageVariables.HEAD;
 		switch (mPreferences.getInt(PreferenceConstants.SEARCH, 1)) {
-		case 0:
-			// CUSTOM SEARCH
-			home = home + "file:///android_asset/lightning.png";
-			home = home + HomepageVariables.MIDDLE;
-			home = home
-					+ mPreferences.getString(PreferenceConstants.SEARCH_URL,
-							Constants.GOOGLE_SEARCH);
-			break;
-		case 1:
-			// GOOGLE_SEARCH;
-			home = home + "file:///android_asset/google.png";
-			// + "https://www.google.com/images/srpr/logo11w.png";
-			home = home + HomepageVariables.MIDDLE;
-			home = home + Constants.GOOGLE_SEARCH;
-			break;
-		case 2:
-			// ANDROID SEARCH;
-			home = home + "file:///android_asset/lightning.png";
-			home = home + HomepageVariables.MIDDLE;
-			home = home + Constants.ANDROID_SEARCH;
-			break;
-		case 3:
-			// BING_SEARCH;
-			home = home + "file:///android_asset/bing.png";
-			// +
-			// "http://upload.wikimedia.org/wikipedia/commons/thumb/b/b1/Bing_logo_%282013%29.svg/500px-Bing_logo_%282013%29.svg.png";
-			home = home + HomepageVariables.MIDDLE;
-			home = home + Constants.BING_SEARCH;
-			break;
-		case 4:
-			// YAHOO_SEARCH;
-			home = home + "file:///android_asset/yahoo.png";
-			// +
-			// "http://upload.wikimedia.org/wikipedia/commons/thumb/2/24/Yahoo%21_logo.svg/799px-Yahoo%21_logo.svg.png";
-			home = home + HomepageVariables.MIDDLE;
-			home = home + Constants.YAHOO_SEARCH;
-			break;
-		case 5:
-			// STARTPAGE_SEARCH;
-			home = home + "file:///android_asset/startpage.png";
-			// + "https://startpage.com/graphics/startp_logo.gif";
-			home = home + HomepageVariables.MIDDLE;
-			home = home + Constants.STARTPAGE_SEARCH;
-			break;
-		case 6:
-			// STARTPAGE_MOBILE
-			home = home + "file:///android_asset/startpage.png";
-			// + "https://startpage.com/graphics/startp_logo.gif";
-			home = home + HomepageVariables.MIDDLE;
-			home = home + Constants.STARTPAGE_MOBILE_SEARCH;
-		case 7:
-			// DUCK_SEARCH;
-			home = home + "file:///android_asset/duckduckgo.png";
-			// +
-			// "https://duckduckgo.com/assets/logo_homepage.normal.v101.png";
-			home = home + HomepageVariables.MIDDLE;
-			home = home + Constants.DUCK_SEARCH;
-			break;
-		case 8:
-			// DUCK_LITE_SEARCH;
-			home = home + "file:///android_asset/duckduckgo.png";
-			// +
-			// "https://duckduckgo.com/assets/logo_homepage.normal.v101.png";
-			home = home + HomepageVariables.MIDDLE;
-			home = home + Constants.DUCK_LITE_SEARCH;
-			break;
-		case 9:
-			// BAIDU_SEARCH;
-			home = home + "file:///android_asset/baidu.png";
-			// + "http://www.baidu.com/img/bdlogo.gif";
-			home = home + HomepageVariables.MIDDLE;
-			home = home + Constants.BAIDU_SEARCH;
-			break;
-		case 10:
-			// YANDEX_SEARCH;
-			home = home + "file:///android_asset/yandex.png";
-			// +
-			// "http://upload.wikimedia.org/wikipedia/commons/thumb/9/91/Yandex.svg/600px-Yandex.svg.png";
-			home = home + HomepageVariables.MIDDLE;
-			home = home + Constants.YANDEX_SEARCH;
-			break;
+			case 0:
+				// CUSTOM SEARCH
+				home = home + "file:///android_asset/lightning.png";
+				home = home + HomepageVariables.MIDDLE;
+				home = home
+						+ mPreferences.getString(PreferenceConstants.SEARCH_URL,
+								Constants.GOOGLE_SEARCH);
+				break;
+			case 1:
+				// GOOGLE_SEARCH;
+				home = home + "file:///android_asset/google.png";
+				// + "https://www.google.com/images/srpr/logo11w.png";
+				home = home + HomepageVariables.MIDDLE;
+				home = home + Constants.GOOGLE_SEARCH;
+				break;
+			case 2:
+				// ANDROID SEARCH;
+				home = home + "file:///android_asset/lightning.png";
+				home = home + HomepageVariables.MIDDLE;
+				home = home + Constants.ANDROID_SEARCH;
+				break;
+			case 3:
+				// BING_SEARCH;
+				home = home + "file:///android_asset/bing.png";
+				// +
+				// "http://upload.wikimedia.org/wikipedia/commons/thumb/b/b1/Bing_logo_%282013%29.svg/500px-Bing_logo_%282013%29.svg.png";
+				home = home + HomepageVariables.MIDDLE;
+				home = home + Constants.BING_SEARCH;
+				break;
+			case 4:
+				// YAHOO_SEARCH;
+				home = home + "file:///android_asset/yahoo.png";
+				// +
+				// "http://upload.wikimedia.org/wikipedia/commons/thumb/2/24/Yahoo%21_logo.svg/799px-Yahoo%21_logo.svg.png";
+				home = home + HomepageVariables.MIDDLE;
+				home = home + Constants.YAHOO_SEARCH;
+				break;
+			case 5:
+				// STARTPAGE_SEARCH;
+				home = home + "file:///android_asset/startpage.png";
+				// + "https://startpage.com/graphics/startp_logo.gif";
+				home = home + HomepageVariables.MIDDLE;
+				home = home + Constants.STARTPAGE_SEARCH;
+				break;
+			case 6:
+				// STARTPAGE_MOBILE
+				home = home + "file:///android_asset/startpage.png";
+				// + "https://startpage.com/graphics/startp_logo.gif";
+				home = home + HomepageVariables.MIDDLE;
+				home = home + Constants.STARTPAGE_MOBILE_SEARCH;
+			case 7:
+				// DUCK_SEARCH;
+				home = home + "file:///android_asset/duckduckgo.png";
+				// +
+				// "https://duckduckgo.com/assets/logo_homepage.normal.v101.png";
+				home = home + HomepageVariables.MIDDLE;
+				home = home + Constants.DUCK_SEARCH;
+				break;
+			case 8:
+				// DUCK_LITE_SEARCH;
+				home = home + "file:///android_asset/duckduckgo.png";
+				// +
+				// "https://duckduckgo.com/assets/logo_homepage.normal.v101.png";
+				home = home + HomepageVariables.MIDDLE;
+				home = home + Constants.DUCK_LITE_SEARCH;
+				break;
+			case 9:
+				// BAIDU_SEARCH;
+				home = home + "file:///android_asset/baidu.png";
+				// + "http://www.baidu.com/img/bdlogo.gif";
+				home = home + HomepageVariables.MIDDLE;
+				home = home + Constants.BAIDU_SEARCH;
+				break;
+			case 10:
+				// YANDEX_SEARCH;
+				home = home + "file:///android_asset/yandex.png";
+				// +
+				// "http://upload.wikimedia.org/wikipedia/commons/thumb/9/91/Yandex.svg/600px-Yandex.svg.png";
+				home = home + HomepageVariables.MIDDLE;
+				home = home + Constants.YANDEX_SEARCH;
+				break;
 
 		}
 
@@ -290,39 +290,39 @@ public class LightningView {
 				.getBoolean(PreferenceConstants.LOCATION, false));
 		if (API < 19) {
 			switch (mPreferences.getInt(PreferenceConstants.ADOBE_FLASH_SUPPORT, 0)) {
-			case 0:
-				mSettings.setPluginState(PluginState.OFF);
-				break;
-			case 1: {
-				mSettings.setPluginState(PluginState.ON_DEMAND);
-				break;
-			}
-			case 2: {
-				mSettings.setPluginState(PluginState.ON);
-				break;
-			}
-			default:
-				break;
+				case 0:
+					mSettings.setPluginState(PluginState.OFF);
+					break;
+				case 1: {
+					mSettings.setPluginState(PluginState.ON_DEMAND);
+					break;
+				}
+				case 2: {
+					mSettings.setPluginState(PluginState.ON);
+					break;
+				}
+				default:
+					break;
 			}
 		}
 
 		switch (mPreferences.getInt(PreferenceConstants.USER_AGENT, 1)) {
-		case 1:
-			if (API > 16)
-				mSettings.setUserAgentString(WebSettings.getDefaultUserAgent(context));
-			else
-				mSettings.setUserAgentString(mDefaultUserAgent);
-			break;
-		case 2:
-			mSettings.setUserAgentString(Constants.DESKTOP_USER_AGENT);
-			break;
-		case 3:
-			mSettings.setUserAgentString(Constants.MOBILE_USER_AGENT);
-			break;
-		case 4:
-			mSettings.setUserAgentString(mPreferences.getString(
-					PreferenceConstants.USER_AGENT_STRING, mDefaultUserAgent));
-			break;
+			case 1:
+				if (API > 16)
+					mSettings.setUserAgentString(WebSettings.getDefaultUserAgent(context));
+				else
+					mSettings.setUserAgentString(mDefaultUserAgent);
+				break;
+			case 2:
+				mSettings.setUserAgentString(Constants.DESKTOP_USER_AGENT);
+				break;
+			case 3:
+				mSettings.setUserAgentString(Constants.MOBILE_USER_AGENT);
+				break;
+			case 4:
+				mSettings.setUserAgentString(mPreferences.getString(
+						PreferenceConstants.USER_AGENT_STRING, mDefaultUserAgent));
+				break;
 		}
 
 		if (mPreferences.getBoolean(PreferenceConstants.SAVE_PASSWORDS, false)) {
@@ -355,21 +355,21 @@ public class LightningView {
 		mSettings.setLoadWithOverviewMode(mPreferences.getBoolean(
 				PreferenceConstants.OVERVIEW_MODE, true));
 		switch (mPreferences.getInt(PreferenceConstants.TEXT_SIZE, 3)) {
-		case 1:
-			mSettings.setTextZoom(200);
-			break;
-		case 2:
-			mSettings.setTextZoom(150);
-			break;
-		case 3:
-			mSettings.setTextZoom(100);
-			break;
-		case 4:
-			mSettings.setTextZoom(75);
-			break;
-		case 5:
-			mSettings.setTextZoom(50);
-			break;
+			case 1:
+				mSettings.setTextZoom(200);
+				break;
+			case 2:
+				mSettings.setTextZoom(150);
+				break;
+			case 3:
+				mSettings.setTextZoom(100);
+				break;
+			case 4:
+				mSettings.setTextZoom(75);
+				break;
+			case 5:
+				mSettings.setTextZoom(50);
+				break;
 		}
 	}
 

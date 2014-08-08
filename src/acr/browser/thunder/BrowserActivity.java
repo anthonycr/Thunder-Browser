@@ -480,21 +480,21 @@ public class BrowserActivity extends Activity implements BrowserController {
 						@Override
 						public void onClick(DialogInterface dialog, int which) {
 							switch (which) {
-							case DialogInterface.BUTTON_POSITIVE: {
-								newTab(false, url);
-								break;
-							}
-							case DialogInterface.BUTTON_NEGATIVE: {
-								mCurrentView.loadUrl(url);
-								break;
-							}
-							case DialogInterface.BUTTON_NEUTRAL: {
-								if (API > 8) {
-									Utils.downloadFile(mActivity, url, mCurrentView.getUserAgent(),
-											"attachment", false);
+								case DialogInterface.BUTTON_POSITIVE: {
+									newTab(false, url);
+									break;
 								}
-								break;
-							}
+								case DialogInterface.BUTTON_NEGATIVE: {
+									mCurrentView.loadUrl(url);
+									break;
+								}
+								case DialogInterface.BUTTON_NEUTRAL: {
+									if (API > 8) {
+										Utils.downloadFile(mActivity, url,
+												mCurrentView.getUserAgent(), "attachment", false);
+									}
+									break;
+								}
 							}
 						}
 					};
@@ -514,21 +514,21 @@ public class BrowserActivity extends Activity implements BrowserController {
 						@Override
 						public void onClick(DialogInterface dialog, int which) {
 							switch (which) {
-							case DialogInterface.BUTTON_POSITIVE: {
-								newTab(false, url);
-								break;
-							}
-							case DialogInterface.BUTTON_NEGATIVE: {
-								mCurrentView.loadUrl(url);
-								break;
-							}
-							case DialogInterface.BUTTON_NEUTRAL: {
-								ClipboardManager clipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
-								ClipData clip = ClipData.newPlainText("label", url);
-								clipboard.setPrimaryClip(clip);
+								case DialogInterface.BUTTON_POSITIVE: {
+									newTab(false, url);
+									break;
+								}
+								case DialogInterface.BUTTON_NEGATIVE: {
+									mCurrentView.loadUrl(url);
+									break;
+								}
+								case DialogInterface.BUTTON_NEUTRAL: {
+									ClipboardManager clipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
+									ClipData clip = ClipData.newPlainText("label", url);
+									clipboard.setPrimaryClip(clip);
 
-								break;
-							}
+									break;
+								}
 							}
 						}
 					};
@@ -548,21 +548,21 @@ public class BrowserActivity extends Activity implements BrowserController {
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
 						switch (which) {
-						case DialogInterface.BUTTON_POSITIVE: {
-							newTab(false, url);
-							break;
-						}
-						case DialogInterface.BUTTON_NEGATIVE: {
-							mCurrentView.loadUrl(url);
-							break;
-						}
-						case DialogInterface.BUTTON_NEUTRAL: {
-							ClipboardManager clipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
-							ClipData clip = ClipData.newPlainText("label", url);
-							clipboard.setPrimaryClip(clip);
+							case DialogInterface.BUTTON_POSITIVE: {
+								newTab(false, url);
+								break;
+							}
+							case DialogInterface.BUTTON_NEGATIVE: {
+								mCurrentView.loadUrl(url);
+								break;
+							}
+							case DialogInterface.BUTTON_NEUTRAL: {
+								ClipboardManager clipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
+								ClipData clip = ClipData.newPlainText("label", url);
+								clipboard.setPrimaryClip(clip);
 
-							break;
-						}
+								break;
+							}
 						}
 					}
 				};
@@ -586,21 +586,21 @@ public class BrowserActivity extends Activity implements BrowserController {
 						@Override
 						public void onClick(DialogInterface dialog, int which) {
 							switch (which) {
-							case DialogInterface.BUTTON_POSITIVE: {
-								newTab(false, newUrl);
-								break;
-							}
-							case DialogInterface.BUTTON_NEGATIVE: {
-								mCurrentView.loadUrl(newUrl);
-								break;
-							}
-							case DialogInterface.BUTTON_NEUTRAL: {
-								if (API > 8) {
-									Utils.downloadFile(mActivity, newUrl,
-											mCurrentView.getUserAgent(), "attachment", false);
+								case DialogInterface.BUTTON_POSITIVE: {
+									newTab(false, newUrl);
+									break;
 								}
-								break;
-							}
+								case DialogInterface.BUTTON_NEGATIVE: {
+									mCurrentView.loadUrl(newUrl);
+									break;
+								}
+								case DialogInterface.BUTTON_NEUTRAL: {
+									if (API > 8) {
+										Utils.downloadFile(mActivity, newUrl,
+												mCurrentView.getUserAgent(), "attachment", false);
+									}
+									break;
+								}
 							}
 						}
 					};
@@ -620,21 +620,21 @@ public class BrowserActivity extends Activity implements BrowserController {
 						@Override
 						public void onClick(DialogInterface dialog, int which) {
 							switch (which) {
-							case DialogInterface.BUTTON_POSITIVE: {
-								newTab(false, newUrl);
-								break;
-							}
-							case DialogInterface.BUTTON_NEGATIVE: {
-								mCurrentView.loadUrl(newUrl);
-								break;
-							}
-							case DialogInterface.BUTTON_NEUTRAL: {
-								ClipboardManager clipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
-								ClipData clip = ClipData.newPlainText("label", newUrl);
-								clipboard.setPrimaryClip(clip);
+								case DialogInterface.BUTTON_POSITIVE: {
+									newTab(false, newUrl);
+									break;
+								}
+								case DialogInterface.BUTTON_NEGATIVE: {
+									mCurrentView.loadUrl(newUrl);
+									break;
+								}
+								case DialogInterface.BUTTON_NEUTRAL: {
+									ClipboardManager clipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
+									ClipData clip = ClipData.newPlainText("label", newUrl);
+									clipboard.setPrimaryClip(clip);
 
-								break;
-							}
+									break;
+								}
 							}
 						}
 					};
@@ -1094,56 +1094,58 @@ public class BrowserActivity extends Activity implements BrowserController {
 			@Override
 			public boolean onMenuItemClick(MenuItem item) {
 				switch (item.getItemId()) {
-				case R.id.action_new_tab:
-					newTab(true, null);
-					return true;
-				case R.id.action_incognito:
-					startActivity(new Intent(mContext, IncognitoActivity.class));
-					return true;
-				case R.id.action_share:
-					if (!mCurrentView.getUrl().startsWith(Constants.FILE)) {
-						Intent shareIntent = new Intent(android.content.Intent.ACTION_SEND);
-						shareIntent.setType("text/plain");
-						shareIntent.putExtra(android.content.Intent.EXTRA_SUBJECT,
-								mCurrentView.getTitle());
-						String shareMessage = mCurrentView.getUrl();
-						shareIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareMessage);
-						startActivity(Intent.createChooser(shareIntent,
-								getResources().getString(R.string.dialog_title_share)));
-					}
-					return true;
-				case R.id.action_bookmarks:
-					openBookmarkPage(mCurrentView.getWebView());
-					return true;
-				case R.id.action_copy:
-					if (mCurrentView != null) {
+					case R.id.action_new_tab:
+						newTab(true, null);
+						return true;
+					case R.id.action_incognito:
+						startActivity(new Intent(mContext, IncognitoActivity.class));
+						return true;
+					case R.id.action_share:
 						if (!mCurrentView.getUrl().startsWith(Constants.FILE)) {
-							ClipboardManager clipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
-							ClipData clip = ClipData.newPlainText("label", mCurrentView.getUrl()
-									.toString());
-							clipboard.setPrimaryClip(clip);
-							Utils.showToast(mContext,
-									mContext.getResources().getString(R.string.message_link_copied));
-
+							Intent shareIntent = new Intent(android.content.Intent.ACTION_SEND);
+							shareIntent.setType("text/plain");
+							shareIntent.putExtra(android.content.Intent.EXTRA_SUBJECT,
+									mCurrentView.getTitle());
+							String shareMessage = mCurrentView.getUrl();
+							shareIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareMessage);
+							startActivity(Intent.createChooser(shareIntent, getResources()
+									.getString(R.string.dialog_title_share)));
 						}
-					}
-					return true;
-				case R.id.action_settings:
-					startActivity(new Intent(mContext, SettingsActivity.class));
-					return true;
-				case R.id.action_history:
-					openHistory();
-					return true;
-				case R.id.action_add_bookmark:
-					if (!mCurrentView.getUrl().startsWith(Constants.FILE)) {
-						addBookmark(mContext, mCurrentView.getTitle(), mCurrentView.getUrl());
-					}
-					return true;
-				case R.id.action_find:
-					findInPage();
-					return true;
-				default:
-					return true;
+						return true;
+					case R.id.action_bookmarks:
+						openBookmarkPage(mCurrentView.getWebView());
+						return true;
+					case R.id.action_copy:
+						if (mCurrentView != null) {
+							if (!mCurrentView.getUrl().startsWith(Constants.FILE)) {
+								ClipboardManager clipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
+								ClipData clip = ClipData.newPlainText("label", mCurrentView
+										.getUrl().toString());
+								clipboard.setPrimaryClip(clip);
+								Utils.showToast(
+										mContext,
+										mContext.getResources().getString(
+												R.string.message_link_copied));
+
+							}
+						}
+						return true;
+					case R.id.action_settings:
+						startActivity(new Intent(mContext, SettingsActivity.class));
+						return true;
+					case R.id.action_history:
+						openHistory();
+						return true;
+					case R.id.action_add_bookmark:
+						if (!mCurrentView.getUrl().startsWith(Constants.FILE)) {
+							addBookmark(mContext, mCurrentView.getTitle(), mCurrentView.getUrl());
+						}
+						return true;
+					case R.id.action_find:
+						findInPage();
+						return true;
+					default:
+						return true;
 				}
 			}
 
@@ -1223,16 +1225,16 @@ public class BrowserActivity extends Activity implements BrowserController {
 			public boolean onKey(View arg0, int arg1, KeyEvent arg2) {
 
 				switch (arg1) {
-				case KeyEvent.KEYCODE_ENTER:
-					InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-					imm.hideSoftInputFromWindow(mSearch.getWindowToken(), 0);
-					searchTheWeb(mSearch.getText().toString());
-					if (mCurrentView != null) {
-						mCurrentView.requestFocus();
-					}
-					return true;
-				default:
-					break;
+					case KeyEvent.KEYCODE_ENTER:
+						InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+						imm.hideSoftInputFromWindow(mSearch.getWindowToken(), 0);
+						searchTheWeb(mSearch.getText().toString());
+						if (mCurrentView != null) {
+							mCurrentView.requestFocus();
+						}
+						return true;
+					default:
+						break;
 				}
 				return false;
 			}
@@ -1367,15 +1369,16 @@ public class BrowserActivity extends Activity implements BrowserController {
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
 					switch (which) {
-					case DialogInterface.BUTTON_POSITIVE:
-						mPreferences.edit().putBoolean(PreferenceConstants.USE_PROXY, true).apply();
+						case DialogInterface.BUTTON_POSITIVE:
+							mPreferences.edit().putBoolean(PreferenceConstants.USE_PROXY, true)
+									.apply();
 
-						initializeTor();
-						break;
-					case DialogInterface.BUTTON_NEGATIVE:
-						mPreferences.edit().putBoolean(PreferenceConstants.USE_PROXY, false)
-								.apply();
-						break;
+							initializeTor();
+							break;
+						case DialogInterface.BUTTON_NEGATIVE:
+							mPreferences.edit().putBoolean(PreferenceConstants.USE_PROXY, false)
+									.apply();
+							break;
 					}
 				}
 			};
@@ -1504,43 +1507,44 @@ public class BrowserActivity extends Activity implements BrowserController {
 		}
 
 		switch (mPreferences.getInt(PreferenceConstants.SEARCH, 1)) {
-		case 0:
-			mSearchText = mPreferences.getString(PreferenceConstants.SEARCH_URL,
-					Constants.GOOGLE_SEARCH);
-			if (!mSearchText.startsWith(Constants.HTTP) && !mSearchText.startsWith(Constants.HTTPS)) {
+			case 0:
+				mSearchText = mPreferences.getString(PreferenceConstants.SEARCH_URL,
+						Constants.GOOGLE_SEARCH);
+				if (!mSearchText.startsWith(Constants.HTTP)
+						&& !mSearchText.startsWith(Constants.HTTPS)) {
+					mSearchText = Constants.GOOGLE_SEARCH;
+				}
+				break;
+			case 1:
 				mSearchText = Constants.GOOGLE_SEARCH;
-			}
-			break;
-		case 1:
-			mSearchText = Constants.GOOGLE_SEARCH;
-			break;
-		case 2:
-			mSearchText = Constants.ANDROID_SEARCH;
-			break;
-		case 3:
-			mSearchText = Constants.BING_SEARCH;
-			break;
-		case 4:
-			mSearchText = Constants.YAHOO_SEARCH;
-			break;
-		case 5:
-			mSearchText = Constants.STARTPAGE_SEARCH;
-			break;
-		case 6:
-			mSearchText = Constants.STARTPAGE_MOBILE_SEARCH;
-			break;
-		case 7:
-			mSearchText = Constants.DUCK_SEARCH;
-			break;
-		case 8:
-			mSearchText = Constants.DUCK_LITE_SEARCH;
-			break;
-		case 9:
-			mSearchText = Constants.BAIDU_SEARCH;
-			break;
-		case 10:
-			mSearchText = Constants.YANDEX_SEARCH;
-			break;
+				break;
+			case 2:
+				mSearchText = Constants.ANDROID_SEARCH;
+				break;
+			case 3:
+				mSearchText = Constants.BING_SEARCH;
+				break;
+			case 4:
+				mSearchText = Constants.YAHOO_SEARCH;
+				break;
+			case 5:
+				mSearchText = Constants.STARTPAGE_SEARCH;
+				break;
+			case 6:
+				mSearchText = Constants.STARTPAGE_MOBILE_SEARCH;
+				break;
+			case 7:
+				mSearchText = Constants.DUCK_SEARCH;
+				break;
+			case 8:
+				mSearchText = Constants.DUCK_LITE_SEARCH;
+				break;
+			case 9:
+				mSearchText = Constants.BAIDU_SEARCH;
+				break;
+			case 10:
+				mSearchText = Constants.YANDEX_SEARCH;
+				break;
 		}
 
 		updateCookiePreference();

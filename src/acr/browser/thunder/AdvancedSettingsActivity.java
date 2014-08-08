@@ -200,14 +200,17 @@ public class AdvancedSettingsActivity extends Activity {
 		@Override
 		public void handleMessage(Message msg) {
 			switch (msg.what) {
-			case 1:
-				Utils.showToast(mHandlerContext,
-						mHandlerContext.getResources().getString(R.string.message_clear_history));
-				break;
-			case 2:
-				Utils.showToast(mHandlerContext,
-						mHandlerContext.getResources().getString(R.string.message_cookies_cleared));
-				break;
+				case 1:
+					Utils.showToast(mHandlerContext,
+							mHandlerContext.getResources()
+									.getString(R.string.message_clear_history));
+					break;
+				case 2:
+					Utils.showToast(
+							mHandlerContext,
+							mHandlerContext.getResources().getString(
+									R.string.message_cookies_cleared));
+					break;
 			}
 			super.handleMessage(msg);
 		}

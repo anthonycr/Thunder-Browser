@@ -22,157 +22,157 @@ import static android.util.Patterns.GOOD_IRI_CHAR;
  */
 public class WebAddress {
 
-    private String mScheme;
+	private String mScheme;
 
-    private String mHost;
+	private String mHost;
 
-    private int mPort;
+	private int mPort;
 
-    private String mPath;
+	private String mPath;
 
-    private String mAuthInfo;
+	private String mAuthInfo;
 
-    static final int MATCH_GROUP_SCHEME = 1;
+	static final int MATCH_GROUP_SCHEME = 1;
 
-    static final int MATCH_GROUP_AUTHORITY = 2;
+	static final int MATCH_GROUP_AUTHORITY = 2;
 
-    static final int MATCH_GROUP_HOST = 3;
+	static final int MATCH_GROUP_HOST = 3;
 
-    static final int MATCH_GROUP_PORT = 4;
+	static final int MATCH_GROUP_PORT = 4;
 
-    static final int MATCH_GROUP_PATH = 5;
+	static final int MATCH_GROUP_PATH = 5;
 
-    static Pattern sAddressPattern = Pattern.compile(
-    /* scheme */"(?:(http|https|file)\\:\\/\\/)?" +
-    /* authority */"(?:([-A-Za-z0-9$_.+!*'(),;?&=]+(?:\\:[-A-Za-z0-9$_.+!*'(),;?&=]+)?)@)?" +
-    /* host */"([" + GOOD_IRI_CHAR + "%_-][" + GOOD_IRI_CHAR + "%_\\.-]*|\\[[0-9a-fA-F:\\.]+\\])?" +
-    /* port */"(?:\\:([0-9]*))?" +
-    /* path */"(\\/?[^#]*)?" +
-    /* anchor */".*", Pattern.CASE_INSENSITIVE);
+	static Pattern sAddressPattern = Pattern.compile(
+	/* scheme */"(?:(http|https|file)\\:\\/\\/)?" +
+	/* authority */"(?:([-A-Za-z0-9$_.+!*'(),;?&=]+(?:\\:[-A-Za-z0-9$_.+!*'(),;?&=]+)?)@)?" +
+	/* host */"([" + GOOD_IRI_CHAR + "%_-][" + GOOD_IRI_CHAR + "%_\\.-]*|\\[[0-9a-fA-F:\\.]+\\])?" +
+	/* port */"(?:\\:([0-9]*))?" +
+	/* path */"(\\/?[^#]*)?" +
+	/* anchor */".*", Pattern.CASE_INSENSITIVE);
 
-    /**
-     * Parses given URI-like string.
-     */
-    public WebAddress(String address) {
-
-	if (address == null) {
-	    throw new IllegalArgumentException("address can't be null");
-	}
-
-	mScheme = "";
-	mHost = "";
-	mPort = -1;
-	mPath = "/";
-	mAuthInfo = "";
-
-	Matcher m = sAddressPattern.matcher(address);
-	String t;
-	if (!m.matches()) {
-	    throw new IllegalArgumentException("Parsing of address '" + address + "' failed");
-	}
-
-	t = m.group(MATCH_GROUP_SCHEME);
-	if (t != null) {
-	    mScheme = t.toLowerCase(Locale.ROOT);
-	}
-	t = m.group(MATCH_GROUP_AUTHORITY);
-	if (t != null) {
-	    mAuthInfo = t;
-	}
-	t = m.group(MATCH_GROUP_HOST);
-	if (t != null) {
-	    mHost = t;
-	}
-	t = m.group(MATCH_GROUP_PORT);
-	if (t != null && !t.isEmpty()) {
-	    // The ':' character is not returned by the regex.
-	    try {
-		mPort = Integer.parseInt(t);
-	    } catch (NumberFormatException ex) {
-		throw new RuntimeException("Parsing of port number failed", ex);
-	    }
-	}
-	t = m.group(MATCH_GROUP_PATH);
-	if (t != null && !t.isEmpty()) {
-	    /*
-	     * handle busted myspace frontpage redirect with missing initial "/"
-	     */
-	    if (t.charAt(0) == '/') {
-		mPath = t;
-	    } else {
-		mPath = '/' + t;
-	    }
-	}
-
-	/*
-	 * Get port from scheme or scheme from port, if necessary and possible
+	/**
+	 * Parses given URI-like string.
 	 */
-	if (mPort == 443 && "".equals(mScheme)) {
-	    mScheme = "https";
-	} else if (mPort == -1) {
-	    if ("https".equals(mScheme)) {
-		mPort = 443;
-	    } else {
-		mPort = 80; // default
-	    }
+	public WebAddress(String address) {
+
+		if (address == null) {
+			throw new IllegalArgumentException("address can't be null");
+		}
+
+		mScheme = "";
+		mHost = "";
+		mPort = -1;
+		mPath = "/";
+		mAuthInfo = "";
+
+		Matcher m = sAddressPattern.matcher(address);
+		String t;
+		if (!m.matches()) {
+			throw new IllegalArgumentException("Parsing of address '" + address + "' failed");
+		}
+
+		t = m.group(MATCH_GROUP_SCHEME);
+		if (t != null) {
+			mScheme = t.toLowerCase(Locale.ROOT);
+		}
+		t = m.group(MATCH_GROUP_AUTHORITY);
+		if (t != null) {
+			mAuthInfo = t;
+		}
+		t = m.group(MATCH_GROUP_HOST);
+		if (t != null) {
+			mHost = t;
+		}
+		t = m.group(MATCH_GROUP_PORT);
+		if (t != null && !t.isEmpty()) {
+			// The ':' character is not returned by the regex.
+			try {
+				mPort = Integer.parseInt(t);
+			} catch (NumberFormatException ex) {
+				throw new RuntimeException("Parsing of port number failed", ex);
+			}
+		}
+		t = m.group(MATCH_GROUP_PATH);
+		if (t != null && !t.isEmpty()) {
+			/*
+			 * handle busted myspace frontpage redirect with missing initial "/"
+			 */
+			if (t.charAt(0) == '/') {
+				mPath = t;
+			} else {
+				mPath = '/' + t;
+			}
+		}
+
+		/*
+		 * Get port from scheme or scheme from port, if necessary and possible
+		 */
+		if (mPort == 443 && "".equals(mScheme)) {
+			mScheme = "https";
+		} else if (mPort == -1) {
+			if ("https".equals(mScheme)) {
+				mPort = 443;
+			} else {
+				mPort = 80; // default
+			}
+		}
+		if ("".equals(mScheme)) {
+			mScheme = "http";
+		}
 	}
-	if ("".equals(mScheme)) {
-	    mScheme = "http";
+
+	@Override
+	public String toString() {
+
+		String port = "";
+		if ((mPort != 443 && "https".equals(mScheme)) || (mPort != 80 && "http".equals(mScheme))) {
+			port = ':' + Integer.toString(mPort);
+		}
+		String authInfo = "";
+		if (!mAuthInfo.isEmpty()) {
+			authInfo = mAuthInfo + '@';
+		}
+
+		return mScheme + "://" + authInfo + mHost + port + mPath;
 	}
-    }
 
-    @Override
-    public String toString() {
-
-	String port = "";
-	if ((mPort != 443 && "https".equals(mScheme)) || (mPort != 80 && "http".equals(mScheme))) {
-	    port = ':' + Integer.toString(mPort);
-	}
-	String authInfo = "";
-	if (!mAuthInfo.isEmpty()) {
-	    authInfo = mAuthInfo + '@';
+	public void setScheme(String scheme) {
+		mScheme = scheme;
 	}
 
-	return mScheme + "://" + authInfo + mHost + port + mPath;
-    }
+	public String getScheme() {
+		return mScheme;
+	}
 
-    public void setScheme(String scheme) {
-	mScheme = scheme;
-    }
+	public void setHost(String host) {
+		mHost = host;
+	}
 
-    public String getScheme() {
-	return mScheme;
-    }
+	public String getHost() {
+		return mHost;
+	}
 
-    public void setHost(String host) {
-	mHost = host;
-    }
+	public void setPort(int port) {
+		mPort = port;
+	}
 
-    public String getHost() {
-	return mHost;
-    }
+	public int getPort() {
+		return mPort;
+	}
 
-    public void setPort(int port) {
-	mPort = port;
-    }
+	public void setPath(String path) {
+		mPath = path;
+	}
 
-    public int getPort() {
-	return mPort;
-    }
+	public String getPath() {
+		return mPath;
+	}
 
-    public void setPath(String path) {
-	mPath = path;
-    }
+	public void setAuthInfo(String authInfo) {
+		mAuthInfo = authInfo;
+	}
 
-    public String getPath() {
-	return mPath;
-    }
-
-    public void setAuthInfo(String authInfo) {
-	mAuthInfo = authInfo;
-    }
-
-    public String getAuthInfo() {
-	return mAuthInfo;
-    }
+	public String getAuthInfo() {
+		return mAuthInfo;
+	}
 }
