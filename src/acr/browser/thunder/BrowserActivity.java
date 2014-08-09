@@ -1656,10 +1656,10 @@ public class BrowserActivity extends Activity implements BrowserController {
 		mTabScrollView.smoothScrollTo(mCurrentView.getTitleView().getLeft(), 0);
 		final boolean isShown = reference.isShown();
 		if (current > position) {
+			
 			if (reference.isShown()) {
 				showTab(mWebViewList.get(position - 1));
 			}
-
 			animateTabRemoval(mWebViewList.get(position).getTitleView(), position, reference,
 					isShown);
 			reference.onDestroy();
@@ -1680,6 +1680,7 @@ public class BrowserActivity extends Activity implements BrowserController {
 			}
 			animateTabRemoval(mWebViewList.get(position).getTitleView(), position, reference,
 					isShown);
+			
 			reference.onDestroy();
 			mWebViewList.remove(position);
 			mIdList.remove(position);
@@ -1733,6 +1734,7 @@ public class BrowserActivity extends Activity implements BrowserController {
 				if (interpolatedTime <= 0.5f) {
 					// animate tab down first
 					v.setTranslationY(initialHeight * interpolatedTime * 2.0f);
+					v.requestLayout();
 				} else {
 					// animate tab width to zero next
 					// v.getLayoutParams().width = initialWidth -
@@ -1764,7 +1766,6 @@ public class BrowserActivity extends Activity implements BrowserController {
 
 			@Override
 			public void onAnimationEnd(Animation animation) {
-
 				mTabLayout.post(new Runnable() {
 					public void run() {
 						// it works without the runOnUiThread, but all UI
