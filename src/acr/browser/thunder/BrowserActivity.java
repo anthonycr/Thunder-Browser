@@ -1656,7 +1656,7 @@ public class BrowserActivity extends Activity implements BrowserController {
 		mTabScrollView.smoothScrollTo(mCurrentView.getTitleView().getLeft(), 0);
 		final boolean isShown = reference.isShown();
 		if (current > position) {
-			
+
 			if (reference.isShown()) {
 				showTab(mWebViewList.get(position - 1));
 			}
@@ -1680,7 +1680,7 @@ public class BrowserActivity extends Activity implements BrowserController {
 			}
 			animateTabRemoval(mWebViewList.get(position).getTitleView(), position, reference,
 					isShown);
-			
+
 			reference.onDestroy();
 			mWebViewList.remove(position);
 			mIdList.remove(position);
@@ -1727,7 +1727,7 @@ public class BrowserActivity extends Activity implements BrowserController {
 		final int initialWidth = v.getMeasuredWidth();
 		final int initialHeight = v.getMeasuredHeight();
 
-		Animation anim = new Animation() {
+		final Animation anim = new Animation() {
 			@Override
 			protected void applyTransformation(float interpolatedTime,
 					android.view.animation.Transformation t) {
@@ -1757,7 +1757,15 @@ public class BrowserActivity extends Activity implements BrowserController {
 		}
 		anim.setDuration(350);
 		anim.setInterpolator(new DecelerateInterpolator());
-		v.startAnimation(anim);
+		Handler handler = new Handler();
+		handler.postDelayed(new Runnable() {
+
+			@Override
+			public void run() {
+				v.startAnimation(anim);
+			}
+
+		}, 150);
 	}
 
 	private synchronized void animateTabRemoval(final TextView view, final int position,
