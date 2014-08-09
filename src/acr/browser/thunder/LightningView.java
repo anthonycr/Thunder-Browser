@@ -28,6 +28,9 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.ColorMatrix;
+import android.graphics.ColorMatrixColorFilter;
+import android.graphics.Paint;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.MailTo;
@@ -76,6 +79,12 @@ public class LightningView {
 	private static AdBlock mAdBlock;
 	private boolean isDestroyed = false;
 	private IntentUtils mIntentUtils = null;
+	private Paint mPaint = new Paint();
+	private static final float[] mNegativeColorArray = { -1.0f, 0, 0, 0, 255, // red
+			0, -1.0f, 0, 0, 255, // green
+			0, 0, -1.0f, 0, 255, // blue
+			0, 0, 0, 1.0f, 0 // alpha
+	};
 
 	@SuppressWarnings("deprecation")
 	public LightningView(Activity activity, String url) {
@@ -376,6 +385,7 @@ public class LightningView {
 	@SuppressWarnings("deprecation")
 	@SuppressLint("SetJavaScriptEnabled")
 	public void initializeSettings(WebSettings settings, Context context) {
+		this.setNormalRendering();
 		if (API < 18) {
 			settings.setAppCacheMaxSize(Long.MAX_VALUE);
 		}
@@ -408,6 +418,33 @@ public class LightningView {
 
 	public boolean isShown() {
 		return mWebView != null && mWebView.isShown();
+	}
+	
+	public void setHardwareRendering() {
+		mWebView.setLayerType(View.LAYER_TYPE_HARDWARE, mPaint);
+	}
+
+	public void setNormalRendering() {
+		mWebView.setLayerType(View.LAYER_TYPE_NONE, mPaint);
+	}
+
+	public void setColorMode(int mode) {
+		switch (mode) {
+			case 0:
+				mPaint.setColorFilter(null);
+				break;
+			case 1:
+				ColorMatrixColorFilter filterInvert = new ColorMatrixColorFilter(
+						mNegativeColorArray);
+				mPaint.setColorFilter(filterInvert);
+				break;
+			case 2:
+				ColorMatrix cm = new ColorMatrix();
+				cm.setSaturation(0);
+				ColorMatrixColorFilter filterGray = new ColorMatrixColorFilter(cm);
+				mPaint.setColorFilter(filterGray);
+				break;
+		}
 	}
 
 	public synchronized void onPause() {
