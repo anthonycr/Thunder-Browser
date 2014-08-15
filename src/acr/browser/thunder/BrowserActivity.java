@@ -439,7 +439,7 @@ public class BrowserActivity extends Activity implements BrowserController {
 			result = mCurrentView.getWebView().getHitTestResult();
 		}
 		if (mCurrentView.getUrl().equals(
-				Constants.FILE + mContext.getCacheDir() + "/bookmarks.html")) {
+				Constants.FILE + mContext.getFilesDir() + "/bookmarks.html")) {
 
 			if (url != null) {
 				AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);
@@ -768,7 +768,7 @@ public class BrowserActivity extends Activity implements BrowserController {
 					+ helper.getTitle() + BookmarkPageVariables.Part4);
 		}
 		bookmarkHtml += BookmarkPageVariables.End;
-		File bookmarkWebPage = new File(mContext.getCacheDir(), "bookmarks.html");
+		File bookmarkWebPage = new File(mContext.getFilesDir(), "bookmarks.html");
 		try {
 			FileWriter bookWriter = new FileWriter(bookmarkWebPage, false);
 			bookWriter.write(bookmarkHtml);
@@ -1554,7 +1554,6 @@ public class BrowserActivity extends Activity implements BrowserController {
 			try {
 				WebkitProxy.resetProxy("acr.browser.thunder.BrowserApp", getApplicationContext());
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
