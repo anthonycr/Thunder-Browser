@@ -153,6 +153,10 @@ public class SearchAdapter extends BaseAdapter implements Filterable {
 					filter.add(mAllBookmarks.get(n));
 					mBookmarks.add(mAllBookmarks.get(n));
 					counter++;
+				} else if (mAllBookmarks.get(n).getUrl().contains(query)) {
+					filter.add(mAllBookmarks.get(n));
+					mBookmarks.add(mAllBookmarks.get(n));
+					counter++;
 				}
 
 			}
