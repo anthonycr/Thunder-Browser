@@ -1684,7 +1684,7 @@ public class BrowserActivity extends Activity implements BrowserController {
 			mWebViewList.remove(position);
 			mIdList.remove(position);
 		} else {
-			if (mCurrentView.getUrl().startsWith(Constants.FILE)
+			if (mCurrentView.getUrl() == null || mCurrentView.getUrl().startsWith(Constants.FILE)
 					|| mCurrentView.getUrl().equals(mHomepage)) {
 				closeActivity();
 			} else {
