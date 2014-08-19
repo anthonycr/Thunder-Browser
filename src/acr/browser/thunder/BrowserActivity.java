@@ -55,6 +55,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
@@ -89,6 +90,7 @@ import android.widget.PopupMenu.OnMenuItemClickListener;
 import android.widget.TextView.OnEditorActionListener;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.VideoView;
 
 @SuppressWarnings("deprecation")
@@ -830,8 +832,8 @@ public class BrowserActivity extends Activity implements BrowserController {
 	}
 
 	public void clearCookies() {
-		CookieManager c = CookieManager.getInstance();
 		CookieSyncManager.createInstance(this);
+		CookieManager c = CookieManager.getInstance();
 		c.removeAllCookie();
 	}
 
@@ -1197,6 +1199,21 @@ public class BrowserActivity extends Activity implements BrowserController {
 			@Override
 			public void onClick(View v) {
 				newTab(true, null);
+			}
+
+		});
+
+		mNewTab.setOnLongClickListener(new OnLongClickListener() {
+
+			@Override
+			public boolean onLongClick(View v) {
+				String url = mPreferences.getString(PreferenceConstants.SAVE_URL, null);
+				if (url != null) {
+					newTab(true, url);
+					Toast.makeText(mContext, R.string.deleted_tab, Toast.LENGTH_SHORT).show();
+				}
+				mEditPrefs.putString(PreferenceConstants.SAVE_URL, null);
+				return false;
 			}
 
 		});
@@ -1651,6 +1668,9 @@ public class BrowserActivity extends Activity implements BrowserController {
 		LightningView reference = mWebViewList.get(position);
 		if (reference == null) {
 			return;
+		}
+		if (reference.getUrl() != null && !reference.getUrl().startsWith(Constants.FILE)) {
+			mEditPrefs.putString(PreferenceConstants.SAVE_URL, reference.getUrl()).apply();
 		}
 		mTabScrollView.smoothScrollTo(mCurrentView.getTitleView().getLeft(), 0);
 		final boolean isShown = reference.isShown();

@@ -33,6 +33,7 @@ public final class PreferenceConstants {
 	public static final String GOOGLE_SEARCH_SUGGESTIONS = "GoogleSearchSuggestions";
 	public static final String CLEAR_HISTORY_EXIT = "clearHistoryExit";
 	public static final String CLEAR_COOKIES_EXIT = "clearCookiesExit";
+	public static final String SAVE_URL = "saveUrl";
 
 	public static final String USE_PROXY = "useProxy";
 	public static final String USE_PROXY_HOST = "useProxyHost";
