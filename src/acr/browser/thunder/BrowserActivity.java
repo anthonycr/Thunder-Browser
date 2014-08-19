@@ -215,7 +215,8 @@ public class BrowserActivity extends Activity implements BrowserController {
 		Runnable update = new Runnable() {
 			@Override
 			public void run() {
-				if (isSystemBrowserAvailable()) {
+				if (isSystemBrowserAvailable()
+						&& mPreferences.getBoolean(PreferenceConstants.SYNC_HISTORY, true)) {
 					try {
 						Browser.updateVisitedHistory(getContentResolver(), url, true);
 					} catch (NullPointerException ignored) {
@@ -256,11 +257,8 @@ public class BrowserActivity extends Activity implements BrowserController {
 				}
 			}
 		};
-		if (url != null) {
-			if (!url.startsWith(Constants.FILE)) {
-				new Thread(update).start();
-
-			}
+		if (url != null && !url.startsWith(Constants.FILE)) {
+			new Thread(update).start();
 		}
 	}
 
