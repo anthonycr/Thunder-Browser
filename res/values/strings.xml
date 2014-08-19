@@ -174,4 +174,9 @@
     <string name="hphosts_ad_server_list">hpHosts Ad Server List</string>
     <string name="freeware">Freeware</string>
     <string name="deleted_tab">Reopened old tab</string>
+    <string name="rendering_mode">Rendering Mode</string>
+    <string name="name_inverted">Inverted</string>
+    <string name="name_grayscale">Grayscale</string>
+    <string name="name_inverted_grayscale">Inverted Grayscale</string>
+    <string name="name_normal">Normal</string>
 </resources>

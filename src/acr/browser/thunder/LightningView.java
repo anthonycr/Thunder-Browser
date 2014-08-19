@@ -295,6 +295,9 @@ public class LightningView {
 		} else if (mSettings == null) {
 			return;
 		}
+		
+		setColorMode(mPreferences.getInt(PreferenceConstants.RENDERING_MODE, 0));
+		
 		mSettings.setGeolocationEnabled(mPreferences
 				.getBoolean(PreferenceConstants.LOCATION, false));
 		if (API < 19) {
@@ -385,7 +388,6 @@ public class LightningView {
 	@SuppressWarnings("deprecation")
 	@SuppressLint("SetJavaScriptEnabled")
 	public void initializeSettings(WebSettings settings, Context context) {
-		this.setNormalRendering();
 		if (API < 18) {
 			settings.setAppCacheMaxSize(Long.MAX_VALUE);
 		}
@@ -419,7 +421,7 @@ public class LightningView {
 	public boolean isShown() {
 		return mWebView != null && mWebView.isShown();
 	}
-	
+
 	public void setHardwareRendering() {
 		mWebView.setLayerType(View.LAYER_TYPE_HARDWARE, mPaint);
 	}
@@ -428,22 +430,41 @@ public class LightningView {
 		mWebView.setLayerType(View.LAYER_TYPE_NONE, mPaint);
 	}
 
+	public void setSoftwareRendering() {
+		mWebView.setLayerType(View.LAYER_TYPE_SOFTWARE, mPaint);
+	}
+
 	public void setColorMode(int mode) {
 		switch (mode) {
 			case 0:
 				mPaint.setColorFilter(null);
+				setNormalRendering();
 				break;
 			case 1:
 				ColorMatrixColorFilter filterInvert = new ColorMatrixColorFilter(
 						mNegativeColorArray);
 				mPaint.setColorFilter(filterInvert);
+				setHardwareRendering();
 				break;
 			case 2:
 				ColorMatrix cm = new ColorMatrix();
 				cm.setSaturation(0);
 				ColorMatrixColorFilter filterGray = new ColorMatrixColorFilter(cm);
 				mPaint.setColorFilter(filterGray);
+				setHardwareRendering();
 				break;
+			case 3:
+				ColorMatrix matrix = new ColorMatrix();
+				matrix.set(mNegativeColorArray);
+				ColorMatrix matrixGray = new ColorMatrix();
+				matrixGray.setSaturation(0);
+				ColorMatrix concat = new ColorMatrix();
+				concat.setConcat(matrix, matrixGray);
+				ColorMatrixColorFilter filterInvertGray = new ColorMatrixColorFilter(concat);
+				mPaint.setColorFilter(filterInvertGray);
+				setHardwareRendering();
+				break;
+
 		}
 	}
 
