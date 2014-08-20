@@ -75,7 +75,6 @@ public class LightningView {
 	private static String mDefaultUserAgent;
 	private static Bitmap mWebpageBitmap;
 	private static SharedPreferences mPreferences;
-	private static boolean mWideViewPort;
 	private static AdBlock mAdBlock;
 	private boolean isDestroyed = false;
 	private IntentUtils mIntentUtils = null;
@@ -168,7 +167,6 @@ public class LightningView {
 			}
 		} else {
 			if (mHomepage.startsWith("about:home")) {
-				mSettings.setUseWideViewPort(false);
 				mWebView.loadUrl(getHomepage());
 			} else if (mHomepage.startsWith("about:bookmarks")) {
 				mBrowserController.openBookmarkPage(mWebView);
@@ -295,9 +293,9 @@ public class LightningView {
 		} else if (mSettings == null) {
 			return;
 		}
-		
+
 		setColorMode(mPreferences.getInt(PreferenceConstants.RENDERING_MODE, 0));
-		
+
 		mSettings.setGeolocationEnabled(mPreferences
 				.getBoolean(PreferenceConstants.LOCATION, false));
 		if (API < 19) {
@@ -363,7 +361,7 @@ public class LightningView {
 				true));
 		mSettings.setUseWideViewPort(mPreferences.getBoolean(PreferenceConstants.USE_WIDE_VIEWPORT,
 				true));
-		mWideViewPort = mPreferences.getBoolean(PreferenceConstants.USE_WIDE_VIEWPORT, true);
+		mPreferences.getBoolean(PreferenceConstants.USE_WIDE_VIEWPORT, true);
 		mSettings.setLoadWithOverviewMode(mPreferences.getBoolean(
 				PreferenceConstants.OVERVIEW_MODE, true));
 		switch (mPreferences.getInt(PreferenceConstants.TEXT_SIZE, 3)) {
@@ -668,21 +666,16 @@ public class LightningView {
 				}
 				view.invalidate();
 			}
-			if (view.getTitle() == null) {
+			if (view.getTitle() == null || view.getTitle().isEmpty()) {
 				mTitle.setTitle(mActivity.getString(R.string.untitled));
-			} else if (!view.getTitle().isEmpty()) {
-				mTitle.setTitle(view.getTitle());
 			} else {
-				mTitle.setTitle(mActivity.getString(R.string.untitled));
+				mTitle.setTitle(view.getTitle());
 			}
 			mBrowserController.update();
 		}
 
 		@Override
 		public void onPageStarted(WebView view, String url, Bitmap favicon) {
-			if (!mSettings.getUseWideViewPort()) {
-				mSettings.setUseWideViewPort(mWideViewPort);
-			}
 			if (isShown()) {
 				mBrowserController.updateUrl(url);
 				mBrowserController.showActionBar();
@@ -705,10 +698,8 @@ public class LightningView {
 
 			if (!mDoLeakHardening)
 				return null;
-			Log.i(Constants.TAG, "yolo -1");
 			// now we are going to proxy!
 			try {
-				Log.i(Constants.TAG, "yolo 0");
 				URL uURl = new URL(url);
 
 				Proxy proxy = null;
