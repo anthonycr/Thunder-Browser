@@ -1210,8 +1210,8 @@ public class BrowserActivity extends Activity implements BrowserController {
 					newTab(true, url);
 					Toast.makeText(mContext, R.string.deleted_tab, Toast.LENGTH_SHORT).show();
 				}
-				mEditPrefs.putString(PreferenceConstants.SAVE_URL, null);
-				return false;
+				mEditPrefs.putString(PreferenceConstants.SAVE_URL, null).apply();
+				return true;
 			}
 
 		});
