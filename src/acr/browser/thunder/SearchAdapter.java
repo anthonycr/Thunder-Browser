@@ -36,14 +36,14 @@ public class SearchAdapter extends BaseAdapter implements Filterable {
 	private List<HistoryItem> mSuggestions;
 	private List<HistoryItem> mFilteredList;
 	private List<HistoryItem> mAllBookmarks;
-	private DatabaseHandler mDatabaseHandler;
+	private HistoryDatabaseHandler mDatabaseHandler;
 	private SharedPreferences mPreferences;
 	private boolean mUseGoogle = true;
 	private Context mContext;
 	private boolean mIncognito;
 
 	public SearchAdapter(Context context, boolean incognito) {
-		mDatabaseHandler = new DatabaseHandler(context);
+		mDatabaseHandler = new HistoryDatabaseHandler(context);
 		mFilteredList = new ArrayList<HistoryItem>();
 		mHistory = new ArrayList<HistoryItem>();
 		mBookmarks = new ArrayList<HistoryItem>();
@@ -161,7 +161,7 @@ public class SearchAdapter extends BaseAdapter implements Filterable {
 
 			}
 			if (mDatabaseHandler == null || !mDatabaseHandler.isOpen()) {
-				mDatabaseHandler = new DatabaseHandler(mContext);
+				mDatabaseHandler = new HistoryDatabaseHandler(mContext);
 			}
 			mHistory = mDatabaseHandler.findItemsContaining(constraint.toString());
 			for (int n = 0; n < mHistory.size(); n++) {

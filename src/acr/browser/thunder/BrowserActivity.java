@@ -40,8 +40,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.database.Cursor;
-import android.database.DatabaseUtils;
-import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -116,8 +114,7 @@ public class BrowserActivity extends Activity implements BrowserController {
 	private MenuInflater mMenuInflater;
 	private List<HistoryItem> mBookmarkList;
 	private boolean mSystemBrowser;
-	private DatabaseHandler mHistoryHandler;
-	private SQLiteDatabase mHistoryDatabase;
+	private HistoryDatabaseHandler mHistoryHandler;
 	private SharedPreferences mPreferences;
 	private Editor mEditPrefs;
 	private ValueCallback<Uri> mUploadMessage;
@@ -223,31 +220,10 @@ public class BrowserActivity extends Activity implements BrowserController {
 					}
 				}
 				try {
-					StringBuilder sb = new StringBuilder("url" + " = ");
-					DatabaseUtils.appendEscapedSQLString(sb, url);
-
-					if (mHistoryHandler == null) {
-						mHistoryHandler = new DatabaseHandler(mContext);
-						mHistoryDatabase = mHistoryHandler.getReadableDatabase();
-					} else if (!mHistoryHandler.isOpen()) {
-						mHistoryHandler = new DatabaseHandler(mContext);
-						mHistoryDatabase = mHistoryHandler.getReadableDatabase();
-					} else if (mHistoryDatabase == null) {
-						mHistoryDatabase = mHistoryHandler.getReadableDatabase();
-					} else if (!mHistoryDatabase.isOpen()) {
-						mHistoryDatabase = mHistoryHandler.getReadableDatabase();
+					if (mHistoryHandler == null && !mHistoryHandler.isOpen()) {
+						mHistoryHandler = new HistoryDatabaseHandler(mContext);
 					}
-					Cursor cursor = mHistoryDatabase.query(DatabaseHandler.TABLE_HISTORY,
-							new String[] { "id", "url", "title" }, sb.toString(), null, null, null,
-							null);
-					if (!cursor.moveToFirst()) {
-						mHistoryHandler.addHistoryItem(new HistoryItem(url, title));
-					} else {
-						mHistoryHandler.delete(url);
-						mHistoryHandler.addHistoryItem(new HistoryItem(url, title));
-					}
-					cursor.close();
-					cursor = null;
+					mHistoryHandler.visitHistoryItem(url, title);
 				} catch (IllegalStateException e) {
 					Log.e(Constants.TAG, "IllegalStateException in updateHistory");
 				} catch (NullPointerException e) {
@@ -811,7 +787,7 @@ public class BrowserActivity extends Activity implements BrowserController {
 	}
 
 	public void clearHistory() {
-		this.deleteDatabase(DatabaseHandler.DATABASE_NAME);
+		this.deleteDatabase(HistoryDatabaseHandler.DATABASE_NAME);
 		WebViewDatabase m = WebViewDatabase.getInstance(this);
 		m.clearFormData();
 		m.clearHttpAuthUsernamePassword();
@@ -920,10 +896,6 @@ public class BrowserActivity extends Activity implements BrowserController {
 
 	@Override
 	protected void onDestroy() {
-		if (mHistoryDatabase != null) {
-			if (mHistoryDatabase.isOpen())
-				mHistoryDatabase.close();
-		}
 		if (mHistoryHandler != null) {
 			if (mHistoryHandler.isOpen())
 				mHistoryHandler.close();
@@ -937,10 +909,6 @@ public class BrowserActivity extends Activity implements BrowserController {
 		if (mCurrentView != null) {
 			mCurrentView.pauseTimers();
 			mCurrentView.onPause();
-		}
-		if (mHistoryDatabase != null) {
-			if (mHistoryDatabase.isOpen())
-				mHistoryDatabase.close();
 		}
 		if (mHistoryHandler != null) {
 			if (mHistoryHandler.isOpen())
@@ -979,11 +947,10 @@ public class BrowserActivity extends Activity implements BrowserController {
 			mCurrentView.onResume();
 
 			if (mHistoryHandler == null) {
-				mHistoryHandler = new DatabaseHandler(this);
+				mHistoryHandler = new HistoryDatabaseHandler(this);
 			} else if (!mHistoryHandler.isOpen()) {
-				mHistoryHandler = new DatabaseHandler(this);
+				mHistoryHandler = new HistoryDatabaseHandler(this);
 			}
-			mHistoryDatabase = mHistoryHandler.getReadableDatabase();
 			mBookmarkList = getBookmarks();
 		} else {
 			initialize();
@@ -1343,11 +1310,10 @@ public class BrowserActivity extends Activity implements BrowserController {
 		});
 
 		if (mHistoryHandler == null) {
-			mHistoryHandler = new DatabaseHandler(this);
+			mHistoryHandler = new HistoryDatabaseHandler(this);
 		} else if (!mHistoryHandler.isOpen()) {
-			mHistoryHandler = new DatabaseHandler(this);
+			mHistoryHandler = new HistoryDatabaseHandler(this);
 		}
-		mHistoryDatabase = mHistoryHandler.getReadableDatabase();
 
 		if (API < 19) {
 			WebIconDatabase.getInstance().open(getDir("icons", MODE_PRIVATE).getPath());
@@ -1599,7 +1565,6 @@ public class BrowserActivity extends Activity implements BrowserController {
 		mIdList.add(mIdGenerator);
 		mIdGenerator++;
 		if (show) {
-			// TODO
 			if (mCurrentView != null) {
 				mBrowserFrame.removeView(mCurrentView.getWebView());
 				mCurrentView.deactivateTab();
@@ -1964,7 +1929,7 @@ public class BrowserActivity extends Activity implements BrowserController {
 	}
 
 	private List<HistoryItem> getHistory() {
-		DatabaseHandler databaseHandler = new DatabaseHandler(mContext);
+		HistoryDatabaseHandler databaseHandler = new HistoryDatabaseHandler(mContext);
 		return databaseHandler.getLastHundredItems();
 	}
 
