@@ -24,16 +24,14 @@ public final class Constants {
 	public static final String HOMEPAGE = "about:home";
 	public static final String BAIDU_SEARCH = "http://www.baidu.com/s?wd=";
 	public static final String YANDEX_SEARCH = "http://yandex.ru/yandsearch?lr=21411&text=";
-	public static final String ADVANCED_SETTINGS_INTENT = "android.intent.action.THUNDER_ADVANCED_SETTINGS";
-	public static final String LICENSE_INTENT = "android.intent.action.THUNDER_LICENSE";
-	public static final String SETTINGS_INTENT = "android.intent.action.THUNDER_SETTINGS";
-	public static final String INCOGNITO_INTENT = "android.intent.action.THUNDER_INCOGNITO";
 	public static final String EXTERNAL_STORAGE = Environment.getExternalStorageDirectory()
 			.toString();
+	
 	public static final String SEPARATOR = "\\|\\$\\|SEPARATOR\\|\\$\\|";
 	public static final String HTTP = "http://";
 	public static final String HTTPS = "https://";
 	public static final String FILE = "file://";
+	public static final String FOLDER = "folder://";
 	public static final String TAG = "Thunder";
 
 }
