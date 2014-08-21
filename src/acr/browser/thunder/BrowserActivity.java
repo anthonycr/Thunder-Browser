@@ -248,7 +248,7 @@ public class BrowserActivity extends Activity implements BrowserController {
 		Intent i = new Intent(Intent.ACTION_GET_CONTENT);
 		i.addCategory(Intent.CATEGORY_OPENABLE);
 		i.setType("*/*");
-		startActivityForResult(Intent.createChooser(i, "File Chooser"), 1);
+		startActivityForResult(Intent.createChooser(i, getString(R.string.title_file_chooser)), 1);
 	}
 
 	@Override
@@ -732,19 +732,18 @@ public class BrowserActivity extends Activity implements BrowserController {
 
 	@Override
 	public void openBookmarkPage(WebView view) {
-		String bookmarkHtml = BookmarkPageVariables.Heading;
+		String bookmarkHtml = BookmarkPage.HEADING;
 		mBookmarkList = getBookmarks();
 		Collections.sort(mBookmarkList, new SortIgnoreCase());
 		Iterator<HistoryItem> iter = mBookmarkList.iterator();
 		HistoryItem helper;
 		while (iter.hasNext()) {
 			helper = iter.next();
-			bookmarkHtml += (BookmarkPageVariables.Part1 + helper.getUrl()
-					+ BookmarkPageVariables.Part2 + helper.getUrl() + BookmarkPageVariables.Part3
-					+ helper.getTitle() + BookmarkPageVariables.Part4);
+			bookmarkHtml += (BookmarkPage.PART1 + helper.getUrl() + BookmarkPage.PART2
+					+ helper.getUrl() + BookmarkPage.PART3 + helper.getTitle() + BookmarkPage.PART4);
 		}
-		bookmarkHtml += BookmarkPageVariables.End;
-		File bookmarkWebPage = new File(mContext.getFilesDir(), "bookmarks.html");
+		bookmarkHtml += BookmarkPage.END;
+		File bookmarkWebPage = new File(mContext.getFilesDir(), BookmarkPage.FILENAME);
 		try {
 			FileWriter bookWriter = new FileWriter(bookmarkWebPage, false);
 			bookWriter.write(bookmarkHtml);
@@ -1894,43 +1893,16 @@ public class BrowserActivity extends Activity implements BrowserController {
 	}
 
 	private void openHistory() {
-
-		Thread history = new Thread(new Runnable() {
+		// Use thread so that history retrieval doesn't block the UI
+		new Thread(new Runnable() {
 
 			@Override
 			public void run() {
-				String historyHtml = HistoryPageVariables.Heading;
-				List<HistoryItem> historyList = getHistory();
-				Iterator<HistoryItem> it = historyList.iterator();
-				HistoryItem helper;
-				while (it.hasNext()) {
-					helper = it.next();
-					historyHtml += HistoryPageVariables.Part1 + helper.getUrl()
-							+ HistoryPageVariables.Part2 + helper.getTitle()
-							+ HistoryPageVariables.Part3 + helper.getUrl()
-							+ HistoryPageVariables.Part4;
-				}
-
-				historyHtml += HistoryPageVariables.End;
-				File historyWebPage = new File(getFilesDir(), "history.html");
-				try {
-					FileWriter hWriter = new FileWriter(historyWebPage, false);
-					hWriter.write(historyHtml);
-					hWriter.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-				mCurrentView.loadUrl(Constants.FILE + historyWebPage);
+				mCurrentView.loadUrl(HistoryPage.getHistoryPage(mContext));
 				mSearch.setText("");
 			}
 
-		});
-		history.run();
-	}
-
-	private List<HistoryItem> getHistory() {
-		HistoryDatabaseHandler databaseHandler = new HistoryDatabaseHandler(mContext);
-		return databaseHandler.getLastHundredItems();
+		}).run();
 	}
 
 	void searchTheWeb(String query) {
