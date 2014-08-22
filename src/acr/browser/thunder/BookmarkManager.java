@@ -38,6 +38,12 @@ public class BookmarkManager {
 	 */
 	public void addBookmark(HistoryItem item) {
 		File bookmarksFile = new File(mContext.getFilesDir(), FILE_BOOKMARKS);
+
+		List<String> bookmarkUrls = getBookmarkUrls();
+
+		if (bookmarkUrls.contains(item.getUrl())) {
+			return;
+		}
 		try {
 			BufferedWriter bookmarkWriter = new BufferedWriter(new FileWriter(bookmarksFile, true));
 			JSONObject object = new JSONObject();
@@ -82,11 +88,41 @@ public class BookmarkManager {
 	}
 
 	/**
+	 * This method deletes the bookmark with the given url
+	 * 
+	 * @param url
+	 */
+	public void deleteBookmark(String url) {
+		List<HistoryItem> list = new ArrayList<HistoryItem>();
+		list = getBookmarks();
+		File bookmarksFile = new File(mContext.getFilesDir(), FILE_BOOKMARKS);
+		try {
+			BufferedWriter fileWriter = new BufferedWriter(new FileWriter(bookmarksFile, false));
+			for (HistoryItem item : list) {
+				if (!item.getUrl().equalsIgnoreCase(url)) {
+					JSONObject object = new JSONObject();
+					object.put(TITLE, item.getTitle());
+					object.put(URL, item.getUrl());
+					object.put(FOLDER, item.getFolder());
+					object.put(ORDER, item.getOrder());
+					fileWriter.write(object.toString());
+					fileWriter.newLine();
+				}
+			}
+			fileWriter.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+	}
+
+	/**
 	 * This method exports the stored bookmarks to a text file in the device's
 	 * external download directory
 	 */
 	public void exportBookmarks() {
-		List<HistoryItem> bookmarkList = Utils.getBookmarks(mContext);
+		List<HistoryItem> bookmarkList = getBookmarks();
 		File bookmarksExport = new File(
 				Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS),
 				"BookmarksExport.txt");
@@ -163,6 +199,32 @@ public class BookmarkManager {
 					item.setOrder(object.getInt(ORDER));
 					bookmarks.add(item);
 				}
+			}
+			bookmarksReader.close();
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		return bookmarks;
+	}
+
+	/**
+	 * Method is used internally for searching the bookmarks
+	 * 
+	 * @return
+	 */
+	private List<String> getBookmarkUrls() {
+		List<String> bookmarks = new ArrayList<String>();
+		File bookmarksFile = new File(mContext.getFilesDir(), FILE_BOOKMARKS);
+		try {
+			BufferedReader bookmarksReader = new BufferedReader(new FileReader(bookmarksFile));
+			String line;
+			while ((line = bookmarksReader.readLine()) != null) {
+				JSONObject object = new JSONObject(line);
+				bookmarks.add(object.getString(URL));
 			}
 			bookmarksReader.close();
 		} catch (FileNotFoundException e) {
