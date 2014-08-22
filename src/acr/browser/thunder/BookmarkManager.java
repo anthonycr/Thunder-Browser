@@ -288,16 +288,18 @@ public class BookmarkManager {
 
 			String title, url;
 			int number = 0;
-
+			List<String> bookmarkUrls = getBookmarkUrls();
 			if (cursor.moveToFirst()) {
 				do {
-					number++;
 					title = cursor.getString(0);
 					url = cursor.getString(1);
 					if (title.isEmpty()) {
 						title = Utils.getDomainName(url);
 					}
-					bookmarkList.add(new HistoryItem(url, title));
+					if (!bookmarkUrls.contains(url)) {
+						number++;
+						bookmarkList.add(new HistoryItem(url, title));
+					}
 				} while (cursor.moveToNext());
 			}
 
@@ -325,14 +327,17 @@ public class BookmarkManager {
 		try {
 			BufferedReader bookmarksReader = new BufferedReader(new FileReader(bookmarksImport));
 			String line;
+			List<String> bookmarkUrls = getBookmarkUrls();
 			while ((line = bookmarksReader.readLine()) != null) {
 				JSONObject object = new JSONObject(line);
-				HistoryItem item = new HistoryItem();
-				item.setTitle(object.getString(TITLE));
-				item.setUrl(object.getString(URL));
-				item.setFolder(object.getString(FOLDER));
-				item.setOrder(object.getInt(ORDER));
-				addBookmark(item);
+				if (!bookmarkUrls.contains(object.getString(URL))) {
+					HistoryItem item = new HistoryItem();
+					item.setTitle(object.getString(TITLE));
+					item.setUrl(object.getString(URL));
+					item.setFolder(object.getString(FOLDER));
+					item.setOrder(object.getInt(ORDER));
+					addBookmark(item);
+				}
 			}
 			bookmarksReader.close();
 		} catch (FileNotFoundException e) {
