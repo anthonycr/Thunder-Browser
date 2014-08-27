@@ -104,7 +104,7 @@
             android:name="acr.browser.thunder.SettingsActivity"
             android:configChanges="orientation|screenSize|keyboardHidden|keyboard"
             android:label="@string/settings"
-            android:theme="@style/LightTheme" >
+            android:theme="@style/DefaultTheme" >
             <intent-filter>
                 <action android:name="android.intent.action.THUNDER_SETTINGS" />
 
@@ -115,7 +115,7 @@
             android:name="acr.browser.thunder.AdvancedSettingsActivity"
             android:configChanges="orientation|screenSize|keyboardHidden|keyboard"
             android:label="@string/advanced"
-            android:theme="@style/LightTheme" >
+            android:theme="@style/DefaultTheme" >
             <intent-filter>
                 <action android:name="android.intent.action.THUNDER_ADVANCED_SETTINGS" />
 
@@ -140,7 +140,7 @@
             android:name="acr.browser.thunder.LicenseActivity"
             android:configChanges="orientation|screenSize|keyboardHidden|keyboard"
             android:label="@string/licenses"
-            android:theme="@style/LightTheme" >
+            android:theme="@style/DefaultTheme" >
             <intent-filter>
                 <action android:name="android.intent.action.THUNDER_LICENSE" />
 
