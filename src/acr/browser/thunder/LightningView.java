@@ -108,6 +108,7 @@ public class LightningView {
 		mWebView.setDrawingCacheEnabled(true);
 		mWebView.setBackgroundColor(activity.getResources().getColor(android.R.color.white));
 		if (API > 15) {
+			mWebView.setBackground(null);
 			mWebView.getRootView().setBackground(null);
 		} else {
 			mWebView.getRootView().setBackgroundDrawable(null);
