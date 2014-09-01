@@ -1627,6 +1627,7 @@ public class BrowserActivity extends Activity implements BrowserController {
 		Log.i(Constants.TAG, "Tab Deleted");
 	}
 
+	@Override
 	public boolean isIncognito() {
 		return false;
 	}

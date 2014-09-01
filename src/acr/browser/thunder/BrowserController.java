@@ -52,4 +52,6 @@ public interface BrowserController {
 	public boolean isActionBarShown();
 
 	public void closeEmptyTab();
+
+	public boolean isIncognito();
 }
