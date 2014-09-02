@@ -1,19 +1,5 @@
 package acr.browser.thunder;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
-import java.net.MalformedURLException;
-import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-
-import org.xmlpull.v1.XmlPullParser;
-import org.xmlpull.v1.XmlPullParserException;
-import org.xmlpull.v1.XmlPullParserFactory;
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -23,11 +9,20 @@ import android.os.AsyncTask;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
-import android.widget.Filter;
-import android.widget.Filterable;
-import android.widget.ImageView;
-import android.widget.TextView;
+import android.widget.*;
+import org.xmlpull.v1.XmlPullParser;
+import org.xmlpull.v1.XmlPullParserException;
+import org.xmlpull.v1.XmlPullParserFactory;
+
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
+import java.net.MalformedURLException;
+import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 
 public class SearchAdapter extends BaseAdapter implements Filterable {
 
@@ -45,12 +40,12 @@ public class SearchAdapter extends BaseAdapter implements Filterable {
 
 	public SearchAdapter(Context context, boolean incognito) {
 		mDatabaseHandler = new HistoryDatabaseHandler(context);
-		mBookmarkManager = new BookmarkManager(context);
 		mFilteredList = new ArrayList<HistoryItem>();
 		mHistory = new ArrayList<HistoryItem>();
 		mBookmarks = new ArrayList<HistoryItem>();
 		mSuggestions = new ArrayList<HistoryItem>();
-		mAllBookmarks = mBookmarkManager.getBookmarks();
+		mBookmarkManager = new BookmarkManager(context);
+		mAllBookmarks = mBookmarkManager.getBookmarks(true);
 		mPreferences = context.getSharedPreferences(PreferenceConstants.PREFERENCES, 0);
 		mUseGoogle = mPreferences.getBoolean(PreferenceConstants.GOOGLE_SEARCH_SUGGESTIONS, true);
 		mContext = context;
@@ -65,7 +60,7 @@ public class SearchAdapter extends BaseAdapter implements Filterable {
 	}
 
 	public void refreshBookmarks() {
-		mAllBookmarks = mBookmarkManager.getBookmarks();
+		mAllBookmarks = mBookmarkManager.getBookmarks(true);
 	}
 
 	@Override
@@ -109,7 +104,23 @@ public class SearchAdapter extends BaseAdapter implements Filterable {
 		holder.mTitle.setText(web.getTitle());
 		holder.mUrl.setText(web.getUrl());
 
-		holder.mImage.setImageDrawable(mContext.getResources().getDrawable(web.getImageId()));
+		int imageId = R.drawable.ic_bookmark;
+		switch (web.getImageId()) {
+			case R.drawable.ic_bookmark: {
+				imageId = R.drawable.ic_bookmark;
+				break;
+			}
+			case R.drawable.ic_search: {
+				imageId = R.drawable.ic_search;
+				break;
+			}
+			case R.drawable.ic_history: {
+				imageId = R.drawable.ic_history;
+				break;
+			}
+		}
+
+		holder.mImage.setImageDrawable(mContext.getResources().getDrawable(imageId));
 
 		return row;
 	}
@@ -201,8 +212,11 @@ public class SearchAdapter extends BaseAdapter implements Filterable {
 	}
 
 	private class SuggestionHolder {
+
 		ImageView mImage;
+
 		TextView mTitle;
+
 		TextView mUrl;
 	}
 
@@ -346,8 +360,9 @@ public class SearchAdapter extends BaseAdapter implements Filterable {
 			}
 			filteredList.add(mSuggestions.get(n));
 		}
-
+		// Log.i("MAX", "Max: "+maxSuggestions+" "+maxBookmarks+" "+maxHistory);
+		// Log.i("SIZE",
+		// "size: "+suggestionsSize+" "+bookmarkSize+" "+historySize);
 		return filteredList;
 	}
-
 }

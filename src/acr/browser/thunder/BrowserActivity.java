@@ -677,7 +677,7 @@ public class BrowserActivity extends Activity implements BrowserController {
 	@Override
 	public void openBookmarkPage(WebView view) {
 		String bookmarkHtml = BookmarkPage.HEADING;
-		mBookmarkList = mBookmarkManager.getBookmarks();
+		mBookmarkList = mBookmarkManager.getBookmarks(true);
 		Collections.sort(mBookmarkList, new SortIgnoreCase());
 		Iterator<HistoryItem> iter = mBookmarkList.iterator();
 		HistoryItem helper;
@@ -874,7 +874,7 @@ public class BrowserActivity extends Activity implements BrowserController {
 			} else if (!mHistoryHandler.isOpen()) {
 				mHistoryHandler = new HistoryDatabaseHandler(this);
 			}
-			mBookmarkList = mBookmarkManager.getBookmarks();
+			mBookmarkList = mBookmarkManager.getBookmarks(true);
 		} else {
 			initialize();
 		}
