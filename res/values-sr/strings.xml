@@ -17,7 +17,7 @@
 
 <resources>
 
-    <string name="app_name">Муња</string>
+    <string name="app_name">Гром</string>
     <string name="drawer_open">Отвори ладицу навигације</string>
     <string name="drawer_close">Затвори ладицу навигације</string>
     <string name="action_websearch">Веб претрага</string>
@@ -168,8 +168,9 @@
     <string name="folder_default">Подразумевана</string>
     <string name="folder_custom">Посебна</string>
     <string name="untitled">Неименована</string>
+    <string name="name">Муња</string>
     <string name="mpl_license">Мозилина Јавна Лиценца в. 2.0</string>
-    <string name="freeware">Фривер</string>
     <string name="android_open_source_project">Андроид пројекат отвореног кôда</string>
     <string name="hphosts_ad_server_list">hpHosts списак рекламних сервера</string>
+    <string name="freeware">Фривер</string>
 </resources>
