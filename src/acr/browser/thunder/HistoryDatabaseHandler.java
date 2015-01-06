@@ -115,7 +115,7 @@ public class HistoryDatabaseHandler extends SQLiteOpenHelper {
 		List<HistoryItem> itemList = new ArrayList<HistoryItem>();
 		// select query
 		String selectQuery = "SELECT * FROM " + TABLE_HISTORY + " WHERE " + KEY_TITLE + " LIKE '%"
-				+ search + "%' OR " + KEY_URL + " LIKE '%" + search + "%'";
+				+ search + "%' OR " + KEY_URL + " LIKE '%" + search + "%' LIMIT 5";
 		Cursor cursor = mDatabase.rawQuery(selectQuery, null);
 
 		// looping through all rows and adding to list
@@ -160,7 +160,7 @@ public class HistoryDatabaseHandler extends SQLiteOpenHelper {
 
 	public List<HistoryItem> getAllHistoryItems() {
 		List<HistoryItem> itemList = new ArrayList<HistoryItem>();
-		String selectQuery = "SELECT  * FROM " + TABLE_HISTORY;
+		String selectQuery = "SELECT * FROM " + TABLE_HISTORY;
 
 		Cursor cursor = mDatabase.rawQuery(selectQuery, null);
 
