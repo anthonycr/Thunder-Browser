@@ -1,5 +1,5 @@
 #@Deprecated
-## This repo is not being maintained any more. Please use Lightning Browser instead.
+## This repo is not being maintained any more. Please use [Lightning Browser](https://github.com/anthonycr/Lightning-Browser) instead.
 
 #Thunder Browser [![Build Status](https://travis-ci.org/anthonycr/Thunder-Browser.svg?branch=master)](https://travis-ci.org/anthonycr/Thunder-Browser)
 ####Speed, Simplicity, Security
