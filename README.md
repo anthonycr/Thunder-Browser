@@ -1,17 +1,17 @@
-#@Deprecated
+# @Deprecated
 ## This repo is not being maintained any more. Please use [Lightning Browser](https://github.com/anthonycr/Lightning-Browser) instead.
 
-#Thunder Browser [![Build Status](https://travis-ci.org/anthonycr/Thunder-Browser.svg?branch=master)](https://travis-ci.org/anthonycr/Thunder-Browser)
-####Speed, Simplicity, Security
-####A Traditional Browsing Experience
-#![](ic_launcher_small.png)
-####Download
+# Thunder Browser [![Build Status](https://travis-ci.org/anthonycr/Thunder-Browser.svg?branch=master)](https://travis-ci.org/anthonycr/Thunder-Browser)
+#### Speed, Simplicity, Security
+#### A Traditional Browsing Experience
+![](ic_launcher_small.png)
+#### Download
 * [Download APK from here](https://github.com/anthonycr/Thunder-Browser/releases)
 
 * Download from Google Play (Not available just yet)
 
 
-####Features
+#### Features
 * Speed of Lightning Browser with a more traditional experience
 
 * Bookmarks
@@ -30,7 +30,7 @@
 
 * Orbot Proxy support 
 
-####Permissions
+#### Permissions
 
 * ````INTERNET````: For accessing the web
 
@@ -46,19 +46,19 @@
 
 * ````ACCESS_NETWORK_STATE````: Required for the WebView to work for some OEM versions of WebKit
 
-####The Code
+#### The Code
 * Please contribute code back if you can. The code isn't perfect.
 * Please add translations/translation fixes as you see need
 
-####Setting Up the Project
+#### Setting Up the Project
 Due to the inclusion of the netcipher library for Orbot proxy support, importing the project will show you some errors. To fix this, first run the following git command in your project folder (NOTE: You need the git command installed to use this):
-````
+```
 git submodule update --init --recursive
-````
+```
 Once you run that command, the IDE should automatically import netcipher and a couple submodules in as separate projects. Than you need to set the netcipher library project as a libary of the browser project however your IDE makes you do that. Once those steps are done, the project should be all set up and ready to go.
 
-####License
-````
+#### License
+```
 Copyright 2014 Anthony Restaino
 
 Thunder Browser
@@ -68,7 +68,4 @@ Thunder Browser
    was not distributed with this file, You can obtain one at 
    
    http://mozilla.org/MPL/2.0/
-````
-This means that you MUST provide attribution in your application to Thunder Browser for the use of this code. The way you can do this is to provide a separate screen in settings showing what open-source libraries and/or apps (this one) you used in your application. You must also open-source any files that you use from this repository and if you use any code at all from this repository, the file you put it in must be open-sourced according the the MPL 2.0 license. To put it simply, if you create a fork of this browser, your browser must be open-source, no exceptions. The only way to avoid open-sourcing a file is to completely write all the code yourself and to not use any code from Thunder. This is in order to provide a way for companies to utilize the code without making private server code public. For further explanation, please email me, or seek legal counsel :-P
-
-If you have any questions regarding the open-source license, please contact me at [anthonyrestaino11@gmail.com](mailto:anthonyrestaino11@gmail.com)
+```
